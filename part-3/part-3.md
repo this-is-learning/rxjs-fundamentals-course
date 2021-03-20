@@ -169,7 +169,7 @@ import { take, first } from 'rxjs/operators';
 const source = from([1, 2, 3]);
 
 const sourceTakeTwo = source.pipe(
-  // will take the first two values from the stream and complete it 
+  // Will take the first two values from the stream and complete it 
 
   take(2),
 );
