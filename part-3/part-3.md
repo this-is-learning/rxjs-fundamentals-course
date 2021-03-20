@@ -404,7 +404,7 @@ const source = from([1, 2, 3]).pipe(
 source.subscribe(value => console.log(value));
 ```
 
-In this case, this `Error` is not being handled at all.To handle it, we will need o learn how to use the **catchError()** operator.
+In this case, this `Error` is not being handled at all. To handle it, we have to learn how to use the **catchError()** operator.
 
 **catchError()** handles all the errors that happen inside the stream. Notice that when an error happens, the old stream completes, so we need to return a new stream from that operator.
 
