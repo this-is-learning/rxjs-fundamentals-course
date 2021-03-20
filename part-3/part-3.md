@@ -199,7 +199,7 @@ Great!Now we know how to take the first values from a stream. Let's see how else
 
 ## **distinct()**
 
-Sometimes we need to only handle unique values, or in other words, ignore duplicates. For that purposes we can utilize the **distinct** operator. It will allow only those values that have not been emitted yet.
+Sometimes we only want to operate on unique values, or in other words, ignore duplicates. For that purposes we can utilize the **distinct** operator. It will only pass values that have not been emitted yet.
 
 ```ts
 import { from } from 'rxjs';
