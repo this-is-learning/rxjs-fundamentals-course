@@ -432,7 +432,7 @@ const source = from([1, 2, 3]).pipe(
 source.subscribe((value => console.log(value));
 ```
 
-Now w can be sure the code will work correctly, and all the errors will be handled.
+Now we can rest assured that the code will work correctly and all errors are handled.
 
 #
 
