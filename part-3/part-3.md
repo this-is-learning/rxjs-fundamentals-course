@@ -376,7 +376,7 @@ const source = sourceFirst.pipe(withLatestFrom(sourceSecond));
 source.subscribe(value => console.log(value));
 ```
 
-The only difference from **combineLatest** is that it will only emit when the source emits. But it won't emit if the other `Observable` has not emitted at all, even if the source emits, just like **combineLatest**. 
+The only difference from **combineLatest** is that it will only emit when the source `Observable` emits. But it won't emit if the `Observable` we proided to **withLatestFrom** has not emitted at all, even if the source `Observable` emits, just like **combineLatest**, so for instance, in this example, the first emission from `sourceSecond` will be ignored. 
 
 #
 
