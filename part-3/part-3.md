@@ -43,7 +43,7 @@ As seen in the example, **from()** creates a stream of values from its argument.
 
 ## **map()**
 
-Creating streams is cool and fun, but even more awesome would be if we learn to change values in that stream. For example, let's multiply every number in a stream by 2. For that purpose we can use the **map()** operator.
+Creating a stream is cool and fun, but it would be even more awesome if we learn to change values in that stream. For example, let's multiply every number in a stream by 2. For that purpose we can use the **map()** operator.
 
 **map()** works on every item in the stream one-by-one. It is fully analogous to **Array.prototype.map**, just for streams.
 
