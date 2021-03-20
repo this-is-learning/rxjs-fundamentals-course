@@ -11,7 +11,7 @@ Contributors:
 
 # Comment
 
-When we only begin to work with **RxJS**, we need to learn about several operators that we will be using all the time. In this part of the course we will learn about the most common operators and also use them in practice.
+When we first begin to work with **RxJS**, we need to learn about several operators that we will be using all the time. In this part of the course we will learn about the most common operators and also use them in practice.
 
 #
 
