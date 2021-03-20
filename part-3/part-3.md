@@ -438,4 +438,8 @@ Now w can be sure the code will work correctly, and all the errors will be handl
 
 # **In Conclusion**
 
-We got to know the most common **RxJS** operators and learned to: change values in a stream, filter values, combine streams and handle errors.
+We got to know the most common **RxJS** operators and learnt to:
+- Change values in a stream
+- Filter values
+- Combine streams
+- Handle errors
