@@ -318,7 +318,7 @@ source$.subscribe(value => console.log(value))
 
 Now let's combine values of those streams! We will learn to use the **combineLatest()** operator.
 
-**combineLatest()** unites the values of all the provided streams, end emits the latest emitted values of each one of them in an `Array`. So, for example, if one stream emits, that value will be combined with all the latest values emitted from other `Observables` in that array, and emitted together.
+**combineLatest()** unites the values of all the provided streams and emits the latest emitted values of each one of them in an `Array`. So, for example, if one stream emits, that value will be combined with all the latest values emitted from other `Observables` in that array, and emitted together.
 **Important!** Notice that **combineLatest** will only start emitting after each source `Observable` has emitted at least once. Previous incomplete values will be ignored 
 
 ```ts
