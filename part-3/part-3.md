@@ -183,7 +183,7 @@ const sourceTakeTwo = source.pipe(
 sourceTakeTwo.subscribe(value => console.log(value));
 
 const sourceTakeFirst = source.pipe(
-  // Will take the ver first value and complete the stream
+  // Will take the very first value and complete the stream
 
   first(),
 );
