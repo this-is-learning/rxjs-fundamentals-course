@@ -159,7 +159,7 @@ Now let's do the opposite, that is, take only the first several values from a st
 
 **take()** takes the first several values in the stream (provided in the argument), and completes the stream.
 
-**first()** takes only the very first value from the stream and complete it. Notice that if the stream completes itself before emitting any value, an `EmptyError` will be thrown, so **first()** is fundamentally different from **take(1)**.
+**first()** takes only the very first value from the stream, then completes it. Notice that if the stream completes before emitting any value, an `EmptyError` will be thrown, so **first()** is fundamentally different from **take(1)**.
 
 ```ts
 import { from } from 'rxjs';
