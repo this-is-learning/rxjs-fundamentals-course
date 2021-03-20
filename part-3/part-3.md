@@ -346,7 +346,7 @@ const source = combineLatest([sourceFirst, sourceSecond]);
 source.subscribe(value => console.log(value));
 ```
 
-Despite the values of two streams are generated at different times, we managed to combine them into a single value, which allows us to handle values from two different streams simultaneously. **combineLatest** allows us to combine as many `Observables` as we want, not just two. 
+Despite the values of these two streams are generated at different times, we manage to combine them into a single value which allows us to handle values from two different streams simultaneously. **combineLatest** allows us to combine as many `Observables` as we want, not just two.
 
 ## **withLatestFrom()**
 
