@@ -195,7 +195,7 @@ const sourceTakeFirst = source.pipe(
 sourceTakeFirst.subscribe(value => console.log(value));
 ```
 
-Great!Now we know how to take the first values from a stream. Let's see how else can we filter values using **RxJS** operators.
+Great! Now that we know how to take the first values from a stream, let's see how else we can filter values using **RxJS** operators.
 
 ## **distinct()**
 
