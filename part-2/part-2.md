@@ -84,6 +84,32 @@ Another thing to note about Solution 2 is that it is _composable_, meaning we co
 
 For now, it's sufficient to think of "reactive" programming as being able to work with asynchronous streams of data (like a sequence of mouse clicks or keystrokes) and respond to events, such as keystrokes or mouse clicks. Ideally, we'd like to be able to compose these streams of data together using _operators_ (map, filter, expand, etc), and have robust error handling.
 
+The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener) :
+
+```js
+document.getElementById('test').addEventListener('click', event => {
+    console.log(event.target);
+});
+```
+This event listener is producing a stream of values, values emitted over time at each user click, and this stream virtually never completes.
+
+When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become had to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).
+
+```js
+document.getElementById('test').addEventListener('click', event => {
+    console.log(event.target);
+    setTimeout(() => {
+            $.ajax({params})
+            .then(res => {
+                // deal with result
+            });
+    }, 400);
+});
+```
+In this pseudo code, we can see callback being nested, and we see that this will cause issues very soon, like _what happens if user clicks multiple times ?_ or _how do we cancel the operation ?_
+
+In order to deal with these streams of data, RxJs will introduce much more elegant and powerful tools such as Observables that will be discussed in the next section.
+
 ## The Iterator and Observer patterns
 
 Iterables - data types that implement the "iterator" interface - are pretty common in Javascript. Perhaps the most common example is the array. Iterables are usually consumed using a `next` method. Consumers of an iteratable tend to pull data from the producer by using the `next` method. The consumer is the one in control of the flow of data.
