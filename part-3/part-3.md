@@ -393,7 +393,7 @@ const source = from([1, 2, 3]).pipe(
   // Something went wrong!
 
   map(() => {
-    throw new Error("Unexpected 🙀!");
+    throw newError("Unexpected 🙀!");
   })
 );
 
@@ -404,35 +404,45 @@ const source = from([1, 2, 3]).pipe(
 source.subscribe(value => console.log(value));
 ```
 
-In this case, this `Error` is not being handled at all. To handle it, we have to learn how to use the **catchError()** operator.
-
-**catchError()** handles all errors that occur inside of a stream. Notice that when an error occurs, the old stream completes, so we need to return a new stream from the `catchError` operator.
+In this case, this `Error` is not being handled at all. Before we get started though, let's learn how to throw errors the RxJS way.
+In some situations, we may need to throw errors ourselves (for example, if an invalid value arises in the stream). This can be done using the `throwError` function. Let's get to know it: `throwError` is a function that returns an `Observable` that immediately throws an error, which we can specify with its argument. Here it is in action:
 
 ```ts
-import { from, of } from 'rxjs';
+import { throwError } from 'rxjs';
 
-import { map, catchError } from 'rxjs/operators';
+throwError('Something went wrong').subscribe(
+  value => console.log(value),
+  error => console.log(error),
+);
 
-const source = from([1, 2, 3]).pipe(
+// Will log "something wen wrong: in the console as an error (colored red) 
+```
+In this example, we have provided a second callback to the `.subscribe` function. This is the error callback, which gets called if there is an unhandled error in the stream.
+
+To handle it, we will need to learn how to use the **catchError()** operator.
+
+**catchError()** handles all the errors that happen inside the stream. Notice that when an error happens, the old stream completes, so we need to return a new stream from that operator.
+
+```ts
+import { throwError, of } from 'rxjs';
+
+import { catchError } from 'rxjs/operators';
+
+const source = throwError('Something went wrong!').pipe(
   // Something went wrong!
-
-  map(() => {
-    throw new Error("Unexpected 🙀!");
-  }),
-
   // Let's handle it!
 
-  catchError(() => of("Expected 😻!")),
+  catchError(() => of("Error handled 😻!")),
 );
 
 // Will log:
 
 //. Error handled 😻!
 
-source.subscribe((value => console.log(value));
+source.subscribe(value => console.log(value);
 ```
 
-Now we can rest assured that the code will work correctly and all errors are handled.
+Now we can be sure the code will work correctly, and all the errors will be handled.
 
 #
 
