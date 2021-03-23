@@ -12,7 +12,11 @@ Chapter 2: Reactive Programming with RxJS
 
 By: Nate Lapinski
 
-In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as; What is declarative programming? What is the Observer pattern, and how does it relate to the Iterator pattern? along with many others. Along the way, we'll build a very simple Observable of our own, and we'll even touch on a couple of topics from the world of functional programming.
+In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as: 
+- What is declarative programming ?
+- What is the Observer pattern, and how does it relate to the Iterator pattern ?
+
+And many others. Along the way, we'll build a very simple Observable of our own, and we'll even touch on a couple of topics from the world of functional programming.
 
 ## Chapter Contents:
 
@@ -32,9 +36,7 @@ In this chapter, we will explore the building blocks of reactive programming and
 - map and filter
 - pipelines: the flow of data through an observable. Transducers.
 
-##
-
-Declarative and Imperative Programming
+## Declarative and Imperative Programming
 
 The difference between these two styles of programming is perhaps best illustrated with an example.
 
@@ -74,15 +76,39 @@ Solution 1 is very clearly **synchronous** (a loop must always be synchronous), 
 
 Solution 2 is a little more interesting. x is an array, so we know that this code is synchronous. However, the _concept_ of mapping over something could very well be asynchronous. We haven't really specified any implementation details with the map, just that we want to apply the function add1 to every element inside of the container x. Maybe those elements are all in memory at once (synchronous), or maybe they are arriving over the network over an interval of time (asynchronous). Indeed, we will see that RxJS has its own map operator, whose semantics aren't so far removed from that of Array.prototype.map.
 
-Another thing to note about Solution 2 is that it is _composable_, meaning we could chain or _pipe_ a sequence of operations together. Composition will be explained in more detail in the section on operators, so don't worry about it right now. The reason it keeps coming up is because composition of operators is one of the things that makes RxJS so powerful. Should you choose to one day venture into the lands of a language like Haskell, you'll see that composition is one of the foundations of functional programming - it's not a concept that's unique to arrays or RxJS.
+Another thing to note about Solution 2 is that it is _composable_, meaning we could chain or _pipe_ a sequence of operations together. For plain Javascript code, composition is mostly based on the return value of the function : if map() does return a new Array, we can call another function on this result. Composition will be explained in more detail in the section on operators, so don't worry about it right now. The reason it keeps coming up is because composition of operators is one of the things that makes RxJS so powerful. Should you choose to one day venture into the lands of a language like Haskell, you'll see that composition is one of the foundations of functional programming - it's not a concept that's unique to arrays or RxJS.
 
 ## Reactive Programming
 
 **(Edit: This section could probably use more detail)**
 
-For now, it's sufficient to think of "reactive" programming as being able to work with
+For now, it's sufficient to think of "reactive" programming as being able to work with asynchronous streams of data (like a sequence of mouse clicks or keystrokes) and respond to events, such as keystrokes or mouse clicks. Ideally, we'd like to be able to compose these streams of data together using _operators_ (map, filter, expand, etc), and have robust error handling.
 
-asynchronous streams of data (like a sequence of mouse clicks or keystrokes) and respond to events, such as keystrokes or mouse clicks. Ideally, we'd like to be able to compose these streams of data together using _operators_ (map, filter, expand, etc), and have robust error handling.
+The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener) :
+
+```js
+document.getElementById('test').addEventListener('click', event => {
+    console.log(event.target);
+});
+```
+This event listener is producing a stream of values, values emitted over time at each user click, and this stream virtually never completes.
+
+When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become had to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).
+
+```js
+document.getElementById('test').addEventListener('click', event => {
+    console.log(event.target);
+    setTimeout(() => {
+            $.ajax({params})
+            .then(res => {
+                // deal with result
+            });
+    }, 400);
+});
+```
+In this pseudo code, we can see callback being nested, and we see that this will cause issues very soon, like _what happens if user clicks multiple times ?_ or _how do we cancel the operation ?_
+
+In order to deal with these streams of data, RxJs will introduce much more elegant and powerful tools such as Observables that will be discussed in the next section.
 
 ## The Iterator and Observer patterns
 

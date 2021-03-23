@@ -11,7 +11,7 @@ Contributors:
 
 # Comment
 
-When we only begin to work with **RxJS**, we need to learn about several operators that we will be using all the time. In this part of the course we will learn about the most common operators and also use them in practice.
+When we first begin to work with **RxJS**, we need to learn about several operators that we will be using all the time. In this part of the course we will learn about the most common operators and also use them in practice.
 
 #
 
@@ -43,7 +43,7 @@ As seen in the example, **from()** creates a stream of values from its argument.
 
 ## **map()**
 
-Creating streams is cool and fun, but even more awesome would be if we learn to change values in that stream. For example, let's multiply every number in a stream by 2. For that purpose we can use the **map()** operator.
+Creating a stream is cool and fun, but it would be even more awesome if we learn to change values in that stream. For example, let's multiply every number in a stream by 2. For that purpose we can use the **map()** operator.
 
 **map()** works on every item in the stream one-by-one. It is fully analogous to **Array.prototype.map**, just for streams.
 
@@ -159,7 +159,7 @@ Now let's do the opposite, that is, take only the first several values from a st
 
 **take()** takes the first several values in the stream (provided in the argument), and completes the stream.
 
-**first()** takes only the very first value from the stream and complete it. Notice that if the stream completes itself before emitting any value, an `EmptyError` will be thrown, so **first()** is fundamentally different from **take(1)**.
+**first()** takes only the very first value from the stream, then completes it. Notice that if the stream completes before emitting any value, an `EmptyError` will be thrown, so **first()** is fundamentally different from **take(1)**.
 
 ```ts
 import { from } from 'rxjs';
@@ -169,7 +169,7 @@ import { take, first } from 'rxjs/operators';
 const source = from([1, 2, 3]);
 
 const sourceTakeTwo = source.pipe(
-  // will take the first two values from the stream and complete it 
+  // Will take the first two values from the stream and complete it 
 
   take(2),
 );
@@ -183,7 +183,7 @@ const sourceTakeTwo = source.pipe(
 sourceTakeTwo.subscribe(value => console.log(value));
 
 const sourceTakeFirst = source.pipe(
-  // Will take the ver first value and complete the stream
+  // Will take the very first value and complete the stream
 
   first(),
 );
@@ -195,11 +195,11 @@ const sourceTakeFirst = source.pipe(
 sourceTakeFirst.subscribe(value => console.log(value));
 ```
 
-Great!Now we know how to take the first values from a stream. Let's see how else can we filter values using **RxJS** operators.
+Great! Now that we know how to take the first values from a stream, let's see how else we can filter values using **RxJS** operators.
 
 ## **distinct()**
 
-Sometimes we need to only handle unique values, or in other words, ignore duplicates. For that purposes we can utilize the **distinct** operator. It will allow only those values that have not been emitted yet.
+Sometimes we only want to operate on unique values, or in other words, ignore duplicates. For that purposes we can utilize the **distinct** operator. It will only pass values that have not been emitted yet.
 
 ```ts
 import { from } from 'rxjs';
@@ -318,8 +318,8 @@ source$.subscribe(value => console.log(value))
 
 Now let's combine values of those streams! We will learn to use the **combineLatest()** operator.
 
-**combineLatest()** unites the values of all the provided streams, end emits the latest emitted values of each one of them in an `Array`. So, for example, if one stream emits, that value will be combined with all the latest values emitted from other `Observables` in that array, and emitted together.
-**Important!** Notice that **combineLatest** will only start emitting after each source `Observable` has emitted at least once. Previous incomplete values will be ignored 
+**combineLatest()** unites the values of all the provided streams and emits the latest emitted values of each one of them in an `Array`. So, for example, if one stream emits, that value will be combined with all the latest values emitted from other `Observables` in that array, and emitted together.
+**Important!** Notice that **combineLatest** only starts emitting after each source `Observable` has emitted at least one value. Values emitted before this moment are ignored by the resulting `Observable`.
 
 ```ts
 import { interval, combineLatest } from 'rxjs';
@@ -346,7 +346,7 @@ const source = combineLatest([sourceFirst, sourceSecond]);
 source.subscribe(value => console.log(value));
 ```
 
-Despite the values of two streams are generated at different times, we managed to combine them into a single value, which allows us to handle values from two different streams simultaneously. **combineLatest** allows us to combine as many `Observables` as we want, not just two. 
+Despite the values of these two streams are generated at different times, we manage to combine them into a single value which allows us to handle values from two different streams simultaneously. **combineLatest** allows us to combine as many `Observables` as we want, not just two.
 
 ## **withLatestFrom()**
 
@@ -376,7 +376,7 @@ const source = sourceFirst.pipe(withLatestFrom(sourceSecond));
 source.subscribe(value => console.log(value));
 ```
 
-The only difference from **combineLatest** is that it will only emit when the source emits. But it won't emit if the other `Observable` has not emitted at all, even if the source emits, just like **combineLatest**. 
+The only difference from **combineLatest** is that it will only emit when the source `Observable` emits. It won't emit if the `Observable` we passed to **withLatestFrom** has not emitted at all, even when the source `Observable` emits. This is similar to **combineLatest**, for instance in this example, the first emission from `sourceSecond` will be ignored. 
 
 #
 
@@ -393,7 +393,7 @@ const source = from([1, 2, 3]).pipe(
   // Something went wrong!
 
   map(() => {
-    throw newError("Unexpected 🙀!");
+    throw new Error("Unexpected 🙀!");
   })
 );
 
@@ -404,48 +404,42 @@ const source = from([1, 2, 3]).pipe(
 source.subscribe(value => console.log(value));
 ```
 
-In this case, this `Error` is not being handled at all. Before we get started though, let's learn how to throw errors the RxJS way.
-In some situations, we may need to throw errors ourselves (for example, if an invalid value arises in the stream). This can be done using the `throwError` function. Let's get to know it: `throwError` is a function that returns an `Observable` that immediately throws an error, which we can specify with its argument. Here it is in action:
+In this case, this `Error` is not being handled at all. To handle it, we have to learn how to use the **catchError()** operator.
+
+**catchError()** handles all errors that occur inside of a stream. Notice that when an error occurs, the old stream completes, so we need to return a new stream from the `catchError` operator.
 
 ```ts
-import { throwError } from 'rxjs';
+import { from, of } from 'rxjs';
 
-throwError('Something went wrong').subscribe(
-  value => console.log(value),
-  error => console.log(error),
-);
+import { map, catchError } from 'rxjs/operators';
 
-// Will log "something wen wrong: in the console as an error (colored red) 
-```
-In this example, we have provided a second callback to the `.subscribe` function. This is the error callback, which gets called if there is an unhandled error in the stream.
-
-To handle it, we will need to learn how to use the **catchError()** operator.
-
-**catchError()** handles all the errors that happen inside the stream. Notice that when an error happens, the old stream completes, so we need to return a new stream from that operator.
-
-```ts
-import { throwError, of } from 'rxjs';
-
-import { catchError } from 'rxjs/operators';
-
-const source = throwError(Something went wrong!).pipe(
+const source = from([1, 2, 3]).pipe(
   // Something went wrong!
+
+  map(() => {
+    throw new Error("Unexpected 🙀!");
+  }),
+
   // Let's handle it!
 
-  catchError(() => of("Error handled 😻!")),
+  catchError(() => of("Expected 😻!")),
 );
 
 // Will log:
 
 //. Error handled 😻!
 
-source.subscribe(value => console.log(value);
+source.subscribe((value => console.log(value));
 ```
 
-Now we can be sure the code will work correctly, and all the errors will be handled.
+Now we can rest assured that the code will work correctly and all errors are handled.
 
 #
 
 # **In Conclusion**
 
-We got to know the most common **RxJS** operators and learned to: change values in a stream, filter values, combine streams and handle errors.
+We got to know the most common **RxJS** operators and learnt to:
+- Change values in a stream
+- Filter values
+- Combine streams
+- Handle errors
