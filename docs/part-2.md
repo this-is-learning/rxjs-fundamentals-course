@@ -81,11 +81,13 @@ Another thing to note about Solution 2 is that it is _composable_, meaning we co
 
 ## Reactive Programming
 
-**(Edit: This section could probably use more detail)**
+(Work in Progress)
 
-For now, it's sufficient to think of "reactive" programming as being able to work with asynchronous streams of data (like a sequence of mouse clicks or keystrokes) and respond to events, such as keystrokes or mouse clicks. Ideally, we'd like to be able to compose these streams of data together using _operators_ (map, filter, expand, etc), and have robust error handling.
+In its simplest definition, Reactive Programming is being able to work with an asynchronous stream of data. You can think of this as a pipe, where data is flowing through from one end to the other and you have to do something with - react - like apply some business logic as the data flows through the pipe. A good example of this, are events like button or mouse clicks, whenever an event is generated, you need to do something. And reactive programming is not just restricted to events, but also extends to data. Let's take a chat application, where two people are having a chat. Whenever a new message arrives, could be in the form of text or a reaction to the previous message, you need to react accordingly and display it appropriately to the user.
 
-The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener) :
+Ideally, we'd like to be able to compose these streams of data together using _operators_ (map, filter, expand, etc), and have robust error handling.
+
+The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener):
 
 ```js
 document.getElementById('test').addEventListener('click', (event) => {
