@@ -28,14 +28,14 @@ Let's review typical async programming issues a developer can encounter:
 - Starting one async operation only after a previous async operation is finished - preventing race conditions.
 - Repeating failed async operation on error or on successful completion.
 - Combining the results of a few async operations results in different ways.
-- Doing displayed data recalculations on each periodical async data update.
+- Recalculating displayed data on each periodical async data update
 - Canceling async operations if it is not needed anymore
 
 Now let's find out whether tools listed above can solve these challenges seamlessly.
 
 _a) Starting one after another_
 
-Well, you can do that with Promise.then.then.then, but that is useful only for very straightforward logic. Also, if we want to perform some complex calculations on the result of one async operation before starting the next one, the callbacks for the &quot;then&quot; functions will become bloated and less readable very fast.
+Well, you can do that with `Promise.then.then.then`, but that is useful only for very straightforward logic. Also, if we want to perform some complex calculations on the result of one async operation before starting the next one, the callbacks for the &quot;then&quot; functions will become bloated and less readable very fast.
 
 We can improve the situation using async/await - but what if we want to repeat failed network requests?
 
@@ -96,7 +96,7 @@ Let's take a usual array - its values are there instantly:
 We can transform these values as well:
 
 ```ts
-[1, 2, 3, 4, 5].map(x => x+1) // 2,3,4,5,6
+[1, 2, 3, 4, 5].map(x => x + 1) // 2,3,4,5,6
 ```
 
 This is very similar to `Observables` - the only difference being that for an `Observable` the values are in place now and some of the values will be received later.
