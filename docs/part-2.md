@@ -9,6 +9,7 @@ Contributors:
 
 - Nate Lapinski
 - Alain Boudard
+- Maina Wycliffe
 
 # Fundamentals of RxJS
 
