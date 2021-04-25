@@ -81,9 +81,9 @@ Another thing to note about Solution 2 is that it is _composable_, meaning we co
 
 ## Reactive Programming
 
-(Work in Progress)
+Reactive Programming is being able to work with an asynchronous stream of data. You can think of this as a pipe, where data is flowing from one end to the other. You can then observe this stream of data and do something with it - react - like apply some business logic as the data flows through the pipe. These data streams can be anything, from HTTP Requests, Mouse and Keyboard events, Data from Sensors, Push Notifications, or anything that can happen. For instance, take a chat application, where two people are having a chat. Whenever a new message arrives, could be in the form of text or a reaction to the previous message, you need to react accordingly and update the UI appropriately.
 
-In its simplest definition, Reactive Programming is being able to work with an asynchronous stream of data. You can think of this as a pipe, where data is flowing through from one end to the other and you have to do something with - react - like apply some business logic as the data flows through the pipe. A good example of this, are events like button or mouse clicks, whenever an event is generated, you need to do something. And reactive programming is not just restricted to events, but also extends to data. Let's take a chat application, where two people are having a chat. Whenever a new message arrives, could be in the form of text or a reaction to the previous message, you need to react accordingly and display it appropriately to the user.
+With ReactiveX (Rx), which RxJS is an implementation of, gives you a toolbox of tools to help you create new data streams, combine, transform, filter, join, handle errors, among others tools that help you manipulate the data in the stream.
 
 Ideally, we'd like to be able to compose these streams of data together using _operators_ (map, filter, expand, etc), and have robust error handling.
 
