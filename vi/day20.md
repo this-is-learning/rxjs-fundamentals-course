@@ -90,7 +90,7 @@ of().subscribe(observer);
 
 ## `from()`
 
-`from()`, similar to `of()`, is also a function that create an `Observable` from some value. However, the difference between `from()` and `of()` is that `from()` only accepts value that is an `Iterable`, or a `Promise`.
+`from()`, similar to `of()`, is also a function that creates an `Observable` from some value. However, the difference between `from()` and `of()` is that `from()` only accepts value that is either an `Iterable`, or a `Promise`.
 
 `from()` also `completes` after it emits all values passed in.
 
@@ -171,7 +171,7 @@ from(set).subscribe(observer);
 from(Promise.resolve('hello world')).subscribe(observer);
 ```
 
-In a case of `Promise`, `from()` will unwrap the `Promise` and `next` the `resolved` value (or `error` the `rejected`). This is also the _official_ way to convert a `Promise` to an `Observable.
+In a case of a `Promise`, `from()` will unwrap the `Promise` and `next` the `resolved` value (or `error` the `rejected`). This is also the _official_ way to convert a `Promise` to an `Observable.
 
 ## `fromEvent()`
 
@@ -345,7 +345,7 @@ But wait, don't we already have `from()` for something like that? There is a _go
 from(fetch('https://jsonplaceholder.typicode.com/todos'));
 ```
 
-Notice that we haven't called `.subscribe()` and the request will still be made.
+Notice that we haven't called `.subscribe()` and the request will still be made. This is because `fetch()` invokes a Promise eagerly as mentioned above.
 
 ## `interval()`
 
