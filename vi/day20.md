@@ -1,11 +1,11 @@
-# Day 20: RxJS Creation
+# Creational operators
 
-In the previous chapter, we've learned about `Observable` and how to create one manually:
+The following example demonstrates how to manually create an `Observable`:
 
 ```ts
 const observable = new Observable(function subscribe(observer) {
   const id = setTimeout(() => {
-    observer.next('Hello Rxjs');
+    observer.next("Hello Rxjs");
     observer.complete();
   }, 1000);
   return function unsubscribe() {
@@ -18,7 +18,7 @@ Some are probably wondering: "Do we have to remember this syntax to work with `O
 
 ## Preface
 
-This is a common `Observer` that we'll be using throughout this post. If there is any example that uses a different `Observer`, I'll point it out.
+This is a common `Observer` that we'll be using throughout this part. If there is any example that uses a different `Observer`, I'll point it out.
 
 ```ts
 const observer = {
@@ -32,18 +32,18 @@ const observer = {
 
 This is a function used to create an `Observable` from any type of value: primitives, Array, Object, Function etc... `of()` accepts all inputs and will `complete` as soon as all have been emitted.
 
-#### Primitive
+### Primitive
 
 ```ts
 /**
- * output: 
+ * output:
  * - next: 'hello'
  * - complete
  */
-of('hello').subscribe(observer);
+of("hello").subscribe(observer);
 ```
 
-#### Object/Array
+### Object/Array
 
 ```ts
 /**
@@ -51,17 +51,17 @@ of('hello').subscribe(observer);
  * - next: [1, 2, 3]
  * - complete
  */
-of([1, 2 ,3]).subscribe(observer);
+of([1, 2, 3]).subscribe(observer);
 
 /**
  * output:
  * - next: {foo: 'bar'}
  * - complete
  */
-of({foo: 'bar'}).subscribe(observer);
+of({ foo: "bar" }).subscribe(observer);
 ```
 
-#### Sequence of values
+### Sequence of values
 
 ```ts
 /**
@@ -74,8 +74,8 @@ of({foo: 'bar'}).subscribe(observer);
  * - next: {foo: 'bar'}
  * - next: [4, 5, 6]
  * - complete
- */ 
-of(1, 2, 3, 'hello', 'world', { foo: 'bar' }, [4, 5, 6]).subscribe(observer);
+ */
+of(1, 2, 3, "hello", "world", { foo: "bar" }, [4, 5, 6]).subscribe(observer);
 ```
 
 `of()` when called with no arguments will `complete` immediately without any `next` notification
@@ -96,7 +96,7 @@ of().subscribe(observer);
 
 > Iterable is value that can be iterated over. For example: an Array, an Object, a Map, a Set, or a String. When you iterate over a String, you'll receive each character in that string.
 
-#### Array
+### Array
 
 ```ts
 /**
@@ -111,7 +111,7 @@ from([1, 2, 3]).subscribe(observer);
 
 When `from()` receives an `Array`, it emits the items in sequence similarly to `of(1, 2, 3)`.
 
-#### String
+### String
 
 ```ts
 /**
@@ -129,22 +129,22 @@ When `from()` receives an `Array`, it emits the items in sequence similarly to `
  * - next: 'd'
  * - complete: 'complete'
  */
-from('hello world').subscribe(observer);
+from("hello world").subscribe(observer);
 ```
 
-#### Map/Set
+### Map/Set
 
 ```ts
 const map = new Map();
-map.set(1, 'hello');
-map.set(2, 'bye');
+map.set(1, "hello");
+map.set(2, "bye");
 
 /**
  * output:
  * - next: [1, 'hello']
  * - next: [2, 'bye']
  * - complete
- */ 
+ */
 from(map).subscribe(observer);
 
 const set = new Set();
@@ -160,15 +160,15 @@ set.add(2);
 from(set).subscribe(observer);
 ```
 
-#### Promise
+### Promise
 
 ```ts
 /**
  * ouput:
  * - next: 'hello world'
  * - complete
- */ 
-from(Promise.resolve('hello world')).subscribe(observer);
+ */
+from(Promise.resolve("hello world")).subscribe(observer);
 ```
 
 In a case of a `Promise`, `from()` will unwrap the `Promise` and `next` the `resolved` value (or `error` the `rejected`). This is also the _official_ way to convert a `Promise` to an `Observable.
@@ -178,20 +178,20 @@ In a case of a `Promise`, `from()` will unwrap the `Promise` and `next` the `res
 `fromEvent()` is used to convert an `Event` to an `Observable`. For example, `DOM Event` like a mouse click or typing in an Input.
 
 ```ts
-const btn = document.querySelector('#btn');
-const input = document.querySelector('#input');
+const btn = document.querySelector("#btn");
+const input = document.querySelector("#input");
 
 /**
  * output:
  * - next: MouseEvent { ... }
  */
-fromEvent(btn, 'click').subscribe(observer);
+fromEvent(btn, "click").subscribe(observer);
 
 /**
  * output:
  * - next: KeyboardEvent { ... }
  */
-fromEvent(input, 'keydown').subscribe(observer);
+fromEvent(input, "keydown").subscribe(observer);
 ```
 
 Notice that `fromEvent()` creates an `Observable` that does not `complete` after emission. This makes total sense because for events like `click` or `keydown`, we would want to keep listening to these events for as long as we need to. In other words, for as long as these DOM Elements are presented to the consumers. `fromEvent()` cannot determine on its own when we no longer need to listen to these events. This also means that we will need to `unsubscribe` from these `Observable` manually to avoid **memory-leak**.
@@ -202,21 +202,21 @@ Notice that `fromEvent()` creates an `Observable` that does not `complete` after
 
 ```ts
 /**
- * output: 
+ * output:
  * - next: MouseEvent {...}
  */
-fromEvent(btn, 'click').subscribe(observer);
+fromEvent(btn, "click").subscribe(observer);
 
 /**
- * output: 
+ * output:
  * - next: MouseEvent {...}
  */
 fromEventPattern(
   (handler) => {
-    btn.addEventListener('click', handler);
+    btn.addEventListener("click", handler);
   },
   (handler) => {
-    btn.removeEventListener('click', handler);
+    btn.removeEventListener("click", handler);
   }
 ).subscribe(observer);
 ```
@@ -228,19 +228,19 @@ Another example:
  * output:
  * - next: 10 10
  */
-fromEvent(btn, 'click')
-  .pipe(map((ev: MouseEvent) => ev.offsetX + ' ' + ev.offsetY))
+fromEvent(btn, "click")
+  .pipe(map((ev: MouseEvent) => ev.offsetX + " " + ev.offsetY))
   .subscribe(observer);
 
 // fromEventPattern
 // In this example, we'll break fromEventPattern() arguments into functions.
 
 function addHandler(handler) {
-  btn.addEventListener('click', handler);
+  btn.addEventListener("click", handler);
 }
 
 function removeHandler(handler) {
-  btn.removeEventListener('click', handler);
+  btn.removeEventListener("click", handler);
 }
 
 /**
@@ -250,7 +250,7 @@ function removeHandler(handler) {
 fromEventPattern(
   addHandler,
   removeHandler,
-  (ev: MouseEvent) => ev.offsetX + ' ' + ev.offsetY
+  (ev: MouseEvent) => ev.offsetX + " " + ev.offsetY
 ).subscribe(observer);
 ```
 
@@ -292,13 +292,15 @@ export interface SocketEventMap {
   event2: number;
 }
 
-@Injectable({providedIn: 'root'})
+@Injectable({ providedIn: "root" })
 export class SocketService {
   private socket: Socket;
 
   // init logic
 
-  on<EventName extends keyof SocketEventMap>(event: EventName): Observabe<SocketEventMap<EventName>> {
+  on<EventName extends keyof SocketEventMap>(
+    event: EventName
+  ): Observabe<SocketEventMap<EventName>> {
     return fromEventPattern(
       (handler) => {
         this.socket?.on(event, handler);
@@ -311,8 +313,8 @@ export class SocketService {
 }
 
 // usage
-this.socketService.on('event1'); // Observable<string>
-this.socketService.on('event2'); // Observable<number>
+this.socketService.on("event1"); // Observable<string>
+this.socketService.on("event2"); // Observable<number>
 ```
 
 ## `fromFetch()`
@@ -321,9 +323,11 @@ this.socketService.on('event2'); // Observable<number>
 
 ```ts
 // Fetch API
-fetch('https://jsonplaceholder.typicode.com/todos')
-  .then(response => response.json())
-  .then(todos => {/*...*/})
+fetch("https://jsonplaceholder.typicode.com/todos")
+  .then((response) => response.json())
+  .then((todos) => {
+    /*...*/
+  });
 
 // fromFetch()
 /**
@@ -331,10 +335,9 @@ fetch('https://jsonplaceholder.typicode.com/todos')
  * - next: [{...}, {...}]
  * - complete
  */
-fromFetch('https://jsonplaceholder.typicode.com/todos')
-  .pipe(
-    switchMap(response => response.json())
-  ).subscribe(observer)
+fromFetch("https://jsonplaceholder.typicode.com/todos")
+  .pipe(switchMap((response) => response.json()))
+  .subscribe(observer);
 ```
 
 The main difference here is that `fetch()` is `Promise` based and is eager. As soon as we invoke `fetch()`, a request will be made. `fromFetch()` converts the request to `Observable` and makes it lazy. The request **will not** be made until we call `.subscribe()` on `fromFetch()`.
@@ -342,7 +345,7 @@ The main difference here is that `fetch()` is `Promise` based and is eager. As s
 But wait, don't we already have `from()` for something like that? There is a _gotcha_.
 
 ```ts
-from(fetch('https://jsonplaceholder.typicode.com/todos'));
+from(fetch("https://jsonplaceholder.typicode.com/todos"));
 ```
 
 Notice that we haven't called `.subscribe()` and the request will still be made. This is because `fetch()` invokes a Promise eagerly as mentioned above.
@@ -367,6 +370,7 @@ interval(1000).subscribe(observer);
 ## `timer()`
 
 `timer()` has two usages:
+
 - Create an `Observable` that will emit number `0` after a specified **delay**. This usage of `timer()` will allow it to `complete` itself.
 - Create an `Observable` that will emit integers starting with `0` after a specified **delay**, then will emit each value after a specified **interval**. This sounds similar to `interval()` but there is a slight difference which we will explore in a bit. Because this second usage is like `interval()`, it will not `complete` on its own.
 
@@ -410,21 +414,22 @@ timer(0, 1000).subscribe(observer);
  * output:
  * - error: 'an error'
  */
-throwError('an error').subscribe(observer);
+throwError("an error").subscribe(observer);
 ```
 
 `throwError()` is usually used with operators that requires an `Observable` as return value. Two main use-cases are:
+
 - `catchError()`: After we handle an error from an `Observable`, we can use `throwError()` to forward this error to the next `ErrorHandler`
 
 ```ts
 obs.pipe(
-  catchError(err => {
+  catchError((err) => {
     // handle error
     showNotification(err.message);
     // forward the error to the next ErrorHandler
     return throwError(err);
   })
-)
+);
 ```
 
 - `(switch|concat|merge)Map` + `retryWhen()`: This is an advanced use-case which we will explore further in **Higher-order Operator** post. The basic idea is we can use `throwError()` to force `retryWhen()` to occur which will **retry** the `Observable` pipeline.
