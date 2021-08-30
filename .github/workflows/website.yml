@@ -33,7 +33,7 @@ jobs:
         uses: actions/cache@v2
         with:
           path: ${{ env.NPM_CACHE_PATH }}
-          key: ${{ runner.os }}-npm-${{ hashFiles('package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('./website/package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
       - run: npm ci
