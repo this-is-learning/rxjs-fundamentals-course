@@ -1,0 +1,420 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Part 3. The most common RxJS operators · RxJS Fundamentals</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="# The most common RxJS operators"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Part 3. The most common RxJS operators · RxJS Fundamentals"/><meta property="og:type" content="website"/><meta property="og:url" content="https://this-is-learning.github.io/rxjs-fundamentals-course/"/><meta property="og:description" content="# The most common RxJS operators"/><meta property="og:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/rxjs-fundamentals-course/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/rxjs-fundamentals-course/js/scrollSpy.js"></script><link rel="stylesheet" href="/rxjs-fundamentals-course/css/main.css"/><script src="/rxjs-fundamentals-course/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/rxjs-fundamentals-course/"><img class="logo" src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals"/><h2 class="headerTitleWithLogo">RxJS Fundamentals</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/rxjs-fundamentals-course/docs/part-1" target="_self">Course</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Part 3</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 1</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-1">Part 1. RxJS: better async programming</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 2</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-2">Part 2. Reactive programming and RxJS</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 3</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-3">Part 3. The most common RxJS operators</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 4</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-4">Part 4. How RxJS is used by Angular</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 5</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-5">Part 5. Everything is a stream: Pushed-based architecture</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 6</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-6">Part 6. Creational operators</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Part 3. The most common RxJS operators</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="the-most-common-rxjs-operators"></a><a href="#the-most-common-rxjs-operators" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>The most common RxJS operators</h1>
+<p>Contributors:</p>
+<ul>
+<li>Andrew Grekov</li>
+<li>Armen Vardanyan</li>
+</ul>
+<h1></h1>
+<h1><a class="anchor" aria-hidden="true" id="rxjs-operators-that-we-use-on-a-daily-basis"></a><a href="#rxjs-operators-that-we-use-on-a-daily-basis" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>RxJS operators that we use on a daily basis</strong></h1>
+<h1><a class="anchor" aria-hidden="true" id="comment"></a><a href="#comment" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Comment</h1>
+<p>When we first begin to work with <strong>RxJS</strong>, we need to learn about several operators that we will be using all the time. In this part of the course we will learn about the most common operators and also use them in practice.</p>
+<h1></h1>
+<h1><a class="anchor" aria-hidden="true" id="changing-values-in-a-stream"></a><a href="#changing-values-in-a-stream" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>Changing values in a stream</strong></h1>
+<h2><a class="anchor" aria-hidden="true" id="from"></a><a href="#from" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>from()</strong></h2>
+<p>To start working with <strong>RxJS</strong> streams, we will use <strong>from()</strong> to create some <code>Observables</code>.</p>
+<p><strong>from()</strong> creates a stream from items of an iterable value. For example, if we pass an <code>Array</code>, it will create a stream with items from it.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 1</span>
+
+<span class="hljs-comment">//. 2</span>
+
+<span class="hljs-comment">//. 3</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>As seen in the example, <strong>from()</strong> creates a stream of values from its argument.</p>
+<h2><a class="anchor" aria-hidden="true" id="map"></a><a href="#map" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>map()</strong></h2>
+<p>Creating a stream is cool and fun, but it would be even more awesome if we learn to change values in that stream. For example, let's multiply every number in a stream by 2. For that purpose we can use the <strong>map()</strong> operator.</p>
+<p><strong>map()</strong> works on every item in the stream one-by-one. It is fully analogous to <strong>Array.prototype.map</strong>, just for streams.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { map } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]).pipe(
+  <span class="hljs-comment">// multiply every value by 2</span>
+
+  map(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> value * <span class="hljs-number">2</span>)
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 2</span>
+
+<span class="hljs-comment">//. 4</span>
+
+<span class="hljs-comment">//. 6</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>As seen from this example, <strong>map()</strong> allows us to receive every item, change it, and return it back to the stream.</p>
+<h1></h1>
+<h1><a class="anchor" aria-hidden="true" id="filtering-items-in-a-stream"></a><a href="#filtering-items-in-a-stream" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>Filtering items in a stream</strong></h1>
+<h2><a class="anchor" aria-hidden="true" id="filter"></a><a href="#filter" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>filter()</strong></h2>
+<p>Sometimes we are facing a task, when we do not want some items from the stream to pass forward. For example, we want only even numbers to pass. For that purpose, we use the <strong>filter()</strong> operator.</p>
+<p><strong>filter()</strong> operator filters items of the stream based on a condition provided by a callback function, which receives every item, and returns a boolean indicating whether that value should or should not pass (such functions are usually called predicates). This is fully analogous to <strong>Array.prototype.filter</strong>, but for streams.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { filter } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>]).pipe(
+  <span class="hljs-comment">// Check if the value is even</span>
+
+  filter(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> value % <span class="hljs-number">2</span> === <span class="hljs-number">0</span>)
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 2</span>
+
+<span class="hljs-comment">//. 4</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>As seen from the example, <strong>filter()</strong> allows us to filter values, and decide if we want a particular value to pass or not.</p>
+<h2><a class="anchor" aria-hidden="true" id="skip-first-take"></a><a href="#skip-first-take" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>skip(), first(), take()</strong></h2>
+<p>Sometimes we need to skip several values, or, on the contrary, only work on the first few. Let's see how we can do that using the <strong>filter()</strong> operator.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { filter } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]).pipe(
+  <span class="hljs-comment">// Will skip the first value and return the next</span>
+
+  filter(<span class="hljs-function">(<span class="hljs-params">value, index</span>) =&gt;</span> index &gt; <span class="hljs-number">0</span>)
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 2</span>
+
+<span class="hljs-comment">//. 3</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p><strong>RxJS</strong> provides us with built-in operators for such tasks. Let's see the <strong>skip()</strong> operator in action and rewrite the code above:</p>
+<p><strong>skip()</strong> operator allows us to skip several values from the start of the stream.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { skip } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]).pipe(
+  <span class="hljs-comment">// Will skip the first value and let every other value after that to pas</span>
+
+  skip(<span class="hljs-number">1</span>)
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 2</span>
+
+<span class="hljs-comment">//. 3</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>We replaced <strong>filter()</strong> with <strong>skip()</strong>, which made our code more readable and understandable. Now our code looks more declarative.</p>
+<p>Now let's do the opposite, that is, take only the first several values from a stream, and ignore the rest. For that purpose, we will need operators <strong>take()</strong> and <strong>first()</strong>.</p>
+<p><strong>take()</strong> takes the first several values in the stream (provided in the argument), and completes the stream.</p>
+<p><strong>first()</strong> takes only the very first value from the stream, then completes it. Notice that if the stream completes before emitting any value, an <code>EmptyError</code> will be thrown, so <strong>first()</strong> is fundamentally different from <strong>take(1)</strong>.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { take, first } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]);
+
+<span class="hljs-keyword">const</span> sourceTakeTwo = source.pipe(
+  <span class="hljs-comment">// Will take the first two values from the stream and complete it</span>
+
+  take(<span class="hljs-number">2</span>)
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 1</span>
+
+<span class="hljs-comment">//. 2</span>
+
+sourceTakeTwo.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+
+<span class="hljs-keyword">const</span> sourceTakeFirst = source.pipe(
+  <span class="hljs-comment">// Will take the very first value and complete the stream</span>
+
+  first()
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 1</span>
+
+sourceTakeFirst.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>Great! Now that we know how to take the first values from a stream, let's see how else we can filter values using <strong>RxJS</strong> operators.</p>
+<h2><a class="anchor" aria-hidden="true" id="distinct"></a><a href="#distinct" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>distinct()</strong></h2>
+<p>Sometimes we only want to operate on unique values, or in other words, ignore duplicates. For that purposes we can utilize the <strong>distinct</strong> operator. It will only pass values that have not been emitted yet.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { distinct } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>, <span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">3</span>]).pipe(
+  <span class="hljs-comment">// Will skip duplicates</span>
+
+  distinct()
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 1</span>
+
+<span class="hljs-comment">//. 2</span>
+
+<span class="hljs-comment">//. 3</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="distinctuntilchanged"></a><a href="#distinctuntilchanged" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>distinctUntilChanged()</strong></h2>
+<p>Sometimes though, we will need to skip duplicates, but only if they come one after another. For that, we can use the <strong>distinctUntilChanged()</strong> operator.</p>
+<p><strong>distinctUntilChanged()</strong> skips duplicate values that immediately follow each other.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { distinctUntilChanged } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">3</span>, <span class="hljs-number">1</span>, <span class="hljs-number">1</span>]).pipe(
+  <span class="hljs-comment">// Will skip the value, if it is a duplicate of the previous one</span>
+
+  distinctUntilChanged()
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 1</span>
+
+<span class="hljs-comment">//. 2</span>
+
+<span class="hljs-comment">//. 3</span>
+
+<span class="hljs-comment">//. 1</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>As we can see, <strong>distinctUntilChanged()</strong> skipped only the first duplicates.</p>
+<h1></h1>
+<h1><a class="anchor" aria-hidden="true" id="combining-streams"></a><a href="#combining-streams" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>Combining streams</strong></h1>
+<p>Sometimes we deal with tasks that require us to handle several streams simultaneously. For starters, let's create some streams to work with. For that purpose we will use the <strong>timer()</strong> function.</p>
+<h2><a class="anchor" aria-hidden="true" id="timer"></a><a href="#timer" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>timer()</strong></h2>
+<p><strong>timer()</strong> creates a stream that emits a value the time (in milliseconds) we provide has passed, essentially working like <code>setTimeout</code>, but for streams.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { timer } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-comment">// First value will be emitted immediately, the next one in 1000ms</span>
+
+<span class="hljs-keyword">const</span> sourceFirst = timer(<span class="hljs-number">0</span>, <span class="hljs-number">1000</span>);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 0 immediately</span>
+
+<span class="hljs-comment">//. 1 in 1.0 second</span>
+
+sourceFirst.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+
+<span class="hljs-comment">// First value in 0.5 second, next one in 1 second</span>
+
+<span class="hljs-keyword">const</span> sourceSecond = timer(<span class="hljs-number">500</span>, <span class="hljs-number">1000</span>);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 0 in 0.5 sec</span>
+
+<span class="hljs-comment">//. 1 in 1.5 sec</span>
+
+sourceSecond.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="interval"></a><a href="#interval" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>interval</strong></h2>
+<p>Next, let's learn how to create a stream that emits over time, but repeatedly (like <code>setInterval</code>). For that purpose, we have the <strong>interval</strong> function:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { interval } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">const</span> source$ = interval(<span class="hljs-number">1000</span>);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. 0 in 1 second</span>
+
+<span class="hljs-comment">//. 1 in 2 seconds</span>
+
+<span class="hljs-comment">//. 2 in 3 seconds</span>
+
+<span class="hljs-comment">// and so on</span>
+
+source$.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="combinelatest"></a><a href="#combinelatest" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>combineLatest()</strong></h2>
+<p>Now let's combine values of those streams! We will learn to use the <strong>combineLatest()</strong> operator.</p>
+<p><strong>combineLatest()</strong> unites the values of all the provided streams and emits the latest emitted values of each one of them in an <code>Array</code>. So, for example, if one stream emits, that value will be combined with all the latest values emitted from other <code>Observables</code> in that array, and emitted together.
+<strong>Important!</strong> Notice that <strong>combineLatest</strong> only starts emitting after each source <code>Observable</code> has emitted at least one value. Values emitted before this moment are ignored by the resulting <code>Observable</code>.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { interval, combineLatest } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">const</span> sourceFirst = interval(<span class="hljs-number">500</span>);
+
+<span class="hljs-keyword">const</span> sourceSecond = interval(<span class="hljs-number">1000</span>);
+
+<span class="hljs-keyword">const</span> source = combineLatest([sourceFirst, sourceSecond]);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. [1, 0] in 1 second</span>
+
+<span class="hljs-comment">//. [2, 0] in 1.5 seconds</span>
+
+<span class="hljs-comment">// [3, 1] in 2 seconds</span>
+
+<span class="hljs-comment">// and so on</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>Despite the values of these two streams are generated at different times, we manage to combine them into a single value which allows us to handle values from two different streams simultaneously. <strong>combineLatest</strong> allows us to combine as many <code>Observables</code> as we want, not just two.</p>
+<h2><a class="anchor" aria-hidden="true" id="withlatestfrom"></a><a href="#withlatestfrom" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>withLatestFrom()</strong></h2>
+<p>As you could see, we received a new value each time any of the two streams emitted. But what if we need to receive a value only when the source <code>Observable</code> emits? Let's achieve that using the <strong>withLatestFrom()</strong> operator.</p>
+<p><strong>withLatestFrom()</strong> combines the source <code>Observable</code> with another one, and emits a combined value only when the source one emits.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { interval } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { withLatestFrom } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> sourceFirst = interval(<span class="hljs-number">1000</span>);
+
+<span class="hljs-keyword">const</span> sourceSecond = interval(<span class="hljs-number">500</span>);
+
+<span class="hljs-keyword">const</span> source = sourceFirst.pipe(withLatestFrom(sourceSecond));
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. [0, 1] in 1.0 second</span>
+
+<span class="hljs-comment">// [1, 3] in 2.0 seconds</span>
+
+<span class="hljs-comment">// [2, 5] in 3.0 seconds</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>The only difference from <strong>combineLatest</strong> is that it will only emit when the source <code>Observable</code> emits. It won't emit if the <code>Observable</code> we passed to <strong>withLatestFrom</strong> has not emitted at all, even when the source <code>Observable</code> emits. This is similar to <strong>combineLatest</strong>, for instance in this example, the first emission from <code>sourceSecond</code> will be ignored.</p>
+<h1></h1>
+<h1><a class="anchor" aria-hidden="true" id="handling-errors-in-streams"></a><a href="#handling-errors-in-streams" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>Handling errors in streams</strong></h1>
+<p>In real life application some exceptional situations may arise, in which cases we will need to correctly handle errors. Let's create an error and see how it goes.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { <span class="hljs-keyword">from</span> } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { map } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> source = <span class="hljs-keyword">from</span>([<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>]).pipe(
+  <span class="hljs-comment">// Something went wrong!</span>
+
+  map(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-keyword">throw</span> newError(<span class="hljs-string">"Unexpected 🙀!"</span>);
+  })
+);
+
+<span class="hljs-comment">// An Error will be thrown:</span>
+
+<span class="hljs-comment">//. Error: Unexpected 🙀!</span>
+
+source.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value));
+</code></pre>
+<p>In this case, this <code>Error</code> is not being handled at all. Before we get started though, let's learn how to throw errors the RxJS way.
+In some situations, we may need to throw errors ourselves (for example, if an invalid value arises in the stream). This can be done using the <code>throwError</code> function. Let's get to know it: <code>throwError</code> is a function that returns an <code>Observable</code> that immediately throws an error, which we can specify with its argument. Here it is in action:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { throwError } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+throwError(<span class="hljs-string">"Something went wrong"</span>).subscribe(
+  <span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(value),
+  <span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(error)
+);
+
+<span class="hljs-comment">// Will log "something wen wrong: in the console as an error (colored red)</span>
+</code></pre>
+<p>In this example, we have provided a second callback to the <code>.subscribe</code> function. This is the error callback, which gets called if there is an unhandled error in the stream.</p>
+<p>To handle it, we will need to learn how to use the <strong>catchError()</strong> operator.</p>
+<p><strong>catchError()</strong> handles all the errors that happen inside the stream. Notice that when an error happens, the old stream completes, so we need to return a new stream from that operator.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">import</span> { throwError, of } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs'</span>;
+
+<span class="hljs-keyword">import</span> { catchError } <span class="hljs-keyword">from</span> <span class="hljs-string">'rxjs/operators'</span>;
+
+<span class="hljs-keyword">const</span> source = throwError(<span class="hljs-string">'Something went wrong!'</span>).pipe(
+  <span class="hljs-comment">// Something went wrong!</span>
+  <span class="hljs-comment">// Let's handle it!</span>
+
+  catchError(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> of(<span class="hljs-string">"Error handled 😻!"</span>)),
+);
+
+<span class="hljs-comment">// Will log:</span>
+
+<span class="hljs-comment">//. Error handled 😻!</span>
+
+source.subscribe(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(value);
+</code></pre>
+<p>Now we can be sure the code will work correctly, and all the errors will be handled.</p>
+<h1></h1>
+<h1><a class="anchor" aria-hidden="true" id="in-conclusion"></a><a href="#in-conclusion" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><strong>In Conclusion</strong></h1>
+<p>We got to know the most common <strong>RxJS</strong> operators and learnt to:</p>
+<ul>
+<li>Change values in a stream</li>
+<li>Filter values</li>
+<li>Combine streams</li>
+<li>Handle errors</li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/rxjs-fundamentals-course/docs/part-2"><span class="arrow-prev">← </span><span class="function-name-prevnext">Part 2. Reactive programming and RxJS</span></a><a class="docs-next button" href="/rxjs-fundamentals-course/docs/part-4"><span class="function-name-prevnext">Part 4. How RxJS is used by Angular</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#from"><strong>from()</strong></a></li><li><a href="#map"><strong>map()</strong></a></li><li><a href="#filter"><strong>filter()</strong></a></li><li><a href="#skip-first-take"><strong>skip(), first(), take()</strong></a></li><li><a href="#distinct"><strong>distinct()</strong></a></li><li><a href="#distinctuntilchanged"><strong>distinctUntilChanged()</strong></a></li><li><a href="#timer"><strong>timer()</strong></a></li><li><a href="#interval"><strong>interval</strong></a></li><li><a href="#combinelatest"><strong>combineLatest()</strong></a></li><li><a href="#withlatestfrom"><strong>withLatestFrom()</strong></a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/rxjs-fundamentals-course/" class="nav-home"><img src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals" width="66" height="58"/></a><div><h5>Open Learning</h5><a href="/rxjs-fundamentals-course/docs/part-1">RxJS Fundamentals</a><a href="https://dev.to/this-is-learning" target="_blank" rel="noreferrer noopener">This is Learning publication</a><a href="https://dev.to/this-is-angular" target="_blank" rel="noreferrer noopener">This is Angular publication</a></div><div><h5>Community</h5><a href="https://discord.gg/ygKzbrBtVn" target="_blank" rel="noreferrer noopener">This is Learning Community Discord</a><a href="https://github.com/this-is-learning">This is Learning GitHub</a><a href="https://github.com/this-is-angular">This is Angular GitHub</a></div><div><h5>Social</h5><a class="github-button" data-icon="octicon-star" data-count-href="/this-is-learning/rxjs-fundamentals-course/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><div class="social"><a href="https://twitter.com/Thisis_Learning" class="twitter-follow-button">Follow @Thisis_Learning</a></div></div></section><section class="copyright">Licensed under CC BY-SA 4.0 by This is Learning</section></footer></div><script>window.twttr=(function(d,s, id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src='https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));</script></body></html>

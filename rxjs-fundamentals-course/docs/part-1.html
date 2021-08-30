@@ -1,0 +1,233 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Part 1. RxJS: better async programming · RxJS Fundamentals</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="# RxJS: better async programming"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Part 1. RxJS: better async programming · RxJS Fundamentals"/><meta property="og:type" content="website"/><meta property="og:url" content="https://this-is-learning.github.io/rxjs-fundamentals-course/"/><meta property="og:description" content="# RxJS: better async programming"/><meta property="og:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/rxjs-fundamentals-course/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/rxjs-fundamentals-course/js/scrollSpy.js"></script><link rel="stylesheet" href="/rxjs-fundamentals-course/css/main.css"/><script src="/rxjs-fundamentals-course/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/rxjs-fundamentals-course/"><img class="logo" src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals"/><h2 class="headerTitleWithLogo">RxJS Fundamentals</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive siteNavItemActive"><a href="/rxjs-fundamentals-course/docs/part-1" target="_self">Course</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Part 1</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 1</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-1">Part 1. RxJS: better async programming</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 2</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-2">Part 2. Reactive programming and RxJS</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 3</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-3">Part 3. The most common RxJS operators</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 4</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-4">Part 4. How RxJS is used by Angular</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 5</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-5">Part 5. Everything is a stream: Pushed-based architecture</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 6</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-6">Part 6. Creational operators</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Part 1. RxJS: better async programming</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="rxjs-better-async-programming"></a><a href="#rxjs-better-async-programming" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>RxJS: better async programming</h1>
+<p>Contributors:</p>
+<ul>
+<li>Oleksandr Poshtaruk</li>
+<li>Armen Vardanyan</li>
+</ul>
+<p>Links for ideas (not part of the article - possibly for 'read more' section)</p>
+<p><a href="https://itnext.io/promises-vs-observables-for-angularjs-to-angular-migration-1161afacef7e">https://itnext.io/promises-vs-observables-for-angularjs-to-angular-migration-1161afacef7e</a></p>
+<h1><a class="anchor" aria-hidden="true" id="why-do-we-need-observables"></a><a href="#why-do-we-need-observables" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Why do we need Observables?</h1>
+<p>Async operations are the core of today's web development. Almost any interesting interaction in a modern web app involves an async operation. Mouse click? Async. Loading data from the backend? Async. Waiting for something to happen before rendering some piece of UI? Also async. But there are not many powerful built-in tools for implementing working with them. Let's recall some of the native ones:</p>
+<ul>
+<li>setTimeout/setInterval</li>
+<li>Promises</li>
+<li>generator (the *functions)</li>
+</ul>
+<p>And that's it.</p>
+<p>Yeah, you may wonder - what about async/await? Well, it turns out, those are just wrappers for Promises, essentially syntactic sugar.</p>
+<p>What challenges usually arise with async programming?</p>
+<p>Let's review typical async programming issues a developer can encounter:</p>
+<ul>
+<li>Starting one async operation only after a previous async operation is finished - preventing race conditions.</li>
+<li>Repeating failed async operation on error or on successful completion.</li>
+<li>Combining the results of a few async operations results in different ways.</li>
+<li>Recalculating displayed data on each periodical async data update</li>
+<li>Canceling async operations if it is not needed anymore</li>
+</ul>
+<p>Now let's find out whether tools listed above can solve these challenges seamlessly.</p>
+<p><em>a) Starting one after another</em></p>
+<p>Well, you can do that with <code>Promise.then.then.then</code>, but that is useful only for very straightforward logic. Also, if we want to perform some complex calculations on the result of one async operation before starting the next one, the callbacks for the &quot;then&quot; functions will become bloated and less readable very fast.</p>
+<p>We can improve the situation using async/await - but what if we want to repeat failed network requests?</p>
+<p>We cannot do that with async/await easily.</p>
+<p><em>b) Combining the results of a few async operations in different ways</em>
+We have Promise.race and Promise.all. Not long ago we got Promise.allSettled (check canIuse before using it)
+But again - that's it. No repeat on success or failure (if we want it).</p>
+<p><em>c) Do displayed data recalculations on each periodical async data update</em>
+Ok. SetTimeout is good here, but it does not provide any complicated failure logic (repeat on failure). It is possible to implement it - but with some code overhead.</p>
+<p><em>d) Cancel async operations in case it is not needed anymore</em>
+You can cancel setTimeout/setInterval - but you cannot cancel fetch (well, you can with AbortController, but check browser support first (IE11))</p>
+<p>But again - _ <strong>combination</strong> _ of async requests result or _ <strong>repeat/retry</strong> _ on error logic implementation remains very challenging.</p>
+<p>Do we have a solution?
+YES!</p>
+<p>Observables from RxJS library.</p>
+<h2><a class="anchor" aria-hidden="true" id="what-is-rxjs"></a><a href="#what-is-rxjs" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>What is RxJS</h2>
+<p>RxJS is a library for reactive programming using <code>Observables</code> which make it easier to compose asynchronous or callback-based code. RxJS is the JavaScript implementation of Reactive programming (or the Reactive Extentions - Rx) paradigm.</p>
+<p>Reactive programming helps handle ASYNC operations easily by treating those as streams of data.</p>
+<p>Data streams are sequences of business logic events.</p>
+<p>Examples of such events are:</p>
+<ul>
+<li>Browser events: mouse clicking/moving, input field change, etc.</li>
+<li>REST API data fetching</li>
+<li>Web-component state switching/DOM updates</li>
+<li>Calculated data update</li>
+<li>WebSocket real time data</li>
+<li>The list goes on</li>
+</ul>
+<p>The main entity (which wraps our data) from that library is the _ <strong>Observable</strong> _.</p>
+<h2><a class="anchor" aria-hidden="true" id="what-are-observables"></a><a href="#what-are-observables" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>What are Observables?</h2>
+<p>Short answer: <code>Observable</code> is an object that represents a stream of data, to which we can subscribe to receive events/error notifications, and which we can manipulate using special functions called operators.</p>
+<p>Long answer: we need to dive a bit deeper.</p>
+<p>To understand Observables better let's use some metaphors:</p>
+<p>a) Array of future values, which are spreaded over time - this may sound complicated, but if we break it down, it is really simple:</p>
+<p>Let's take a usual array - its values are there instantly:</p>
+<pre><code class="hljs css language-ts">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>]; <span class="hljs-comment">// we can access all values at once - they are already there</span>
+</code></pre>
+<p>We can transform these values as well:</p>
+<pre><code class="hljs css language-ts">[<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>, <span class="hljs-number">4</span>, <span class="hljs-number">5</span>].map(<span class="hljs-function">(<span class="hljs-params">x</span>) =&gt;</span> x + <span class="hljs-number">1</span>); <span class="hljs-comment">// 2,3,4,5,6</span>
+</code></pre>
+<p>This is very similar to <code>Observables</code> - the only difference being that for an <code>Observable</code> the values are in place now and some of the values will be received later.</p>
+<p><code>Observable</code>: [1 &lt;--some time---&gt; 2 &lt;--time→...]</p>
+<p>It is important to understand that most values will arrive and be handled later (at the moment of arrival).</p>
+<p>[1 &lt;--sometime---&gt;2 &lt;--time→...].pipe(map(x =&gt; x+1)) // [2…..3…..etc]</p>
+<p>b) Push-based value fetching - what does this mean? In general, we mostly use pull based value fetching in programming. A great example of pull based value fetching are functions: they are there, but we, the consumer of their value, determine when we will call the function to receive and handle the data. On the other hand, for example, a click MouseEvent listener is a push based system - we can never know when the event will be <em>pushed</em> to us - the producer determines when we receive values - but we will handle those values <em>as soon as</em> they arrive.</p>
+<p>If we talk about arrays - we get any value when we want it.</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> someArray = [<span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>];
+someArray[i];
+</code></pre>
+<p>But in the case of <code>Observables</code> (where values are delivered in the future), the receiver (which is called subscriber or observer- more about it in the next chapter) cannot control when the producer will emit values.</p>
+<p>This approach is called push-based.</p>
+<p>So, in the end, an <code>Observable</code> is an object representing a stream of values spread over time, delivered via a push based system, which can be subscribed to in order to receive and handle those values, and transformed using special functions called operators.</p>
+<h2><a class="anchor" aria-hidden="true" id="promises-and-observables"></a><a href="#promises-and-observables" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Promises <strong>and</strong> Observables</h2>
+<p>Now let's compare Promises and Observables.</p>
+<p>They have some similarities that will help us understand Observables.</p>
+<p>The main similarity between them is that both of them represent a result of an async operation and how it is being handled. Both <code>Promises</code> and <code>Observables</code> operate with data that isn't available right now but will arrive in the future. So what's the main difference then?</p>
+<p>The thing is, <code>Promises</code> are only one particular case of async operation - a singular operation with a final and conclusive result. What does that mean? Let's take a look at a standard HTTP request - how is it invoked and resolved? Well, we call a URL using one of the HTTP methods, and get a <code>Promise</code> that will invoke the callback to the &quot;then&quot; method when data arrives (this is called &quot;resolving a <code>Promise</code>&quot;), or, if there has been any kind of error during the request, call the callback provided to the &quot;catch&quot; method (this is called &quot;rejecting a <code>Promise</code>&quot;). Okay, so this is an operation that gets (or fails to) some data, handles it and just goes away. We cannot do anything with the <code>Promise</code> after it is resolved/rejected - we have to make another HTTP call, create a new <code>Promise</code> and handle it again in the same way.</p>
+<p>Now, let's take a look at some click events on a button. We start listening to the click events, but there is no guarantee that the callback will be invoked any time soon, right? Now, 5 minutes later the user finally clicks the button, and our callback works and handles the event, but it is not &quot;resolved&quot;. The user can continue clicking on the button as many times as they want, and we would still have to handle that click. And after the user finally goes to another page, we have to stop listening to the clicks, because there is no button any more. We cannot represent a stream of events like clicks with a Promise, because a Promise works once and is destroyed afterwards. But <code>Observable</code> Streams of RxJS give us the ability to create streams, listen to their events, handle error cases, and also, handle the situation when the stream completes - like when the user went to another page in our example. So, in this regard, we can treat <code>Observables</code> as a far more powerful version of Promises, which deals with multiple events rather than one instance.</p>
+<p><img src="RackMultipart20210318-4-1e6dc56_html_19b10da71535a078.png" alt=""></p>
+<p>(Picture by @thekiba_io)</p>
+<p>Now lets take a closer look.</p>
+<p>You may ask - so what is the difference? And why do we need <code>Observables</code> at all if they actually do same things?</p>
+<p>Let me first answer a second question:</p>
+<p>The main power of RxJS is a variation of operators that can emulate any async steam behavior - for example combine streams, repeat streams on success or retry on error, etc - out of the box.</p>
+<p>Why operators are so powerful? Because they can do many things:</p>
+<ol>
+<li><p>Modify stream data</p></li>
+<li><p>Filter out data you don't need (if duplicate data is emitted or based on a condition)</p></li>
+<li><p>Repeat/retry data emissions on success or on failure (mostly used for HTTP requests wrapped in <code>Observables</code>)</p></li>
+<li><p>Combination of steams is also possible not only as <code>Promise.all</code> (all resolved) or <code>Promise.race</code> (any resolved) but with many more cases:</p></li>
+</ol>
+<ul>
+<li>Emission of more than one value</li>
+<li>On each value from source1 take last emitted value from source2</li>
+<li>On any emission from source1 or source2 emit array of last values from both</li>
+<li>Etc</li>
+</ul>
+<p>For example:</p>
+<p><strong>a) combineLatest</strong>(observable1, observable2,…) — waits for any of observable to emit and provide array of last emitted values from all observables (result: [value_obs1, value_obs2,..]). Very good if you should update page on a new data from a few different sources.</p>
+<p><strong>b)</strong> observable1.pipe( <strong>withLatestFrom</strong> (observable2) — on each value from observable1 also provide last emitted value for observable2 (result: [value_obs1, value_obs2]).</p>
+<p><strong>c) forkJoin</strong>(observable1, observable2,…)— analog for Promise.all — waits till all Observables are complete and then emits an array of last values from all of the argument observables.</p>
+<p><strong>d)**</strong>zip** (observable1, observable2,…)— waits for all of the argument observables to emit values with the same index and provide an array of emitted values with the same index (result: [value_obs1, value_obs2,..]).</p>
+<p><strong>e) race</strong>(observable1, observable2,…) — returns an Observable that mirrors the first source Observable to emit an item.</p>
+<p><strong>f) merge</strong>(observable1, observable2,…) — subscribes to every argument observable and re-emits values from all of them.</p>
+<p><strong>g) switchMap</strong> — if previous Observable is not completed — cancel it and subscribe to new one.</p>
+<p><strong>I) concat</strong>(observable1, observable2,…) — start next Observable sequence only after previous one is done (emits values one by one after each specific Observable completion)</p>
+<p>And many more (<a href="https://rxjs-dev.firebaseapp.com/api/operators/switchMap">switchMap</a>, mergeMap, <a href="https://rxjs-dev.firebaseapp.com/api/index/function/partition">partition</a>, <a href="https://rxjs-dev.firebaseapp.com/api/index/function/iif">iif</a>, <a href="https://rxjs-dev.firebaseapp.com/api/operators/groupBy">groupBy</a>, <a href="https://rxjs-dev.firebaseapp.com/api/operators/window">window</a>, etc)</p>
+<p>We will review some of these combinations and their use-cases in a later chapter. And dig deeper in advanced RxJS course.</p>
+<blockquote>
+<p>Now lets review the main differences between Promises and Observables you should be aware of (or they will bite you some time later)</p>
+</blockquote>
+<h3><a class="anchor" aria-hidden="true" id="promises-vs-observables"></a><a href="#promises-vs-observables" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Promises <strong>vs</strong> Observables</h3>
+<p>At first glance — Observables are just advanced Promises: Promises emits one value and complete (resolve), Observables emit 0, one or many values and complete as well (emit and complete are different actions). For HTTP service in AngularJS (where it used Promises) and Angular (where it uses Observables) provides only one value — so seems both frameworks work very similar in this case.</p>
+<p><img src="RackMultipart20210318-4-1e6dc56_html_fc59ddf18c80e00b.png" alt=""></p>
+<p>but if you application is doing something more then 'Hello world' — please pay attention to the differences.</p>
+<h3><a class="anchor" aria-hidden="true" id="1-eager-vs-lazy"></a><a href="#1-eager-vs-lazy" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>#1 Eager vs Lazy</h3>
+<p>Take a look at the example below: <img src="RackMultipart20210318-4-1e6dc56_html_533e70b36f8382d3.png" alt=""></p>
+<p>When I call the <code>saveChanges</code> method — the first example with <code>Promise</code>-wrapped request will work as expected. But in seconds <code>Observable</code>-wrapped example nothing will happen because <code>Observables</code> are lazily-evaluated while <code>Promises</code> are eagerly-evaluated.</p>
+<p>This means that Promises doesn't care whether they have any consumers that wait for their result or not, they will emit the value regardless. But <code>Observables</code> (to be precise — <em>cold</em> <code>Observables</code>) will emit only if we subscribe to them. In the case above you should subscribe to the <code>Observable</code> returned by <strong>saveChanges</strong> function.</p>
+<pre><code class="hljs css language-ts">saveChanges(data).subscribe();
+</code></pre>
+<p>To keep an eye on it — use <em>rxjs-no-ignored-observable</em> rule from <a href="https://github.com/cartant/rxjs-tslint-rules/blob/master/source/rules/rxjsNoIgnoredObservableRule.ts">rxjs-tslint-rules</a> by <a href="https://medium.com/u/d05557088657?source=post_page-----1161afacef7e----------------------">Nicholas Jamieson</a>.</p>
+<h3><a class="anchor" aria-hidden="true" id="2-promises-cannot-be-canceled-while-observables-can-be-unsubscribed"></a><a href="#2-promises-cannot-be-canceled-while-observables-can-be-unsubscribed" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>#2 Promises cannot be canceled while Observables can be unsubscribed</h3>
+<p>Again, start with an example when we do search on a backend on input text change</p>
+<p><img src="RackMultipart20210318-4-1e6dc56_html_518aba158767f496.png" alt=""></p>
+<p>There is a drawback here — you cannot reject results of the previous request if the user continues typing (<code>debounce</code> make this problem a bit less but doesn't eliminate it). And yet another issue — race conditions are possible (when a later request result will come back faster then an earlier one — so we get an incorrect response displayed).</p>
+<p><code>Observables</code> can avoid this concern quite elegantly with <a href="https://rxjs-dev.firebaseapp.com/api/operators/switchMap">_ <strong>switchMap</strong> _</a> operator</p>
+<p><img src="RackMultipart20210318-4-1e6dc56_html_f31260205a770974.png" alt=""></p>
+<p>We will talk about <code>switchMap</code> and other higher-order-observable operators in the advanced RxJS course.</p>
+<h3><a class="anchor" aria-hidden="true" id="3-easy-to-prevent-race-conditions-with-observables-and-hard---with-promises"></a><a href="#3-easy-to-prevent-race-conditions-with-observables-and-hard---with-promises" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>#3 Easy to prevent race conditions with Observables and hard - with Promises.</h3>
+<p>Say we periodically make a network request for updated data. But in some situations later request results will come back faster than the earlier ones — so we get incorrect (earlier requested) responses displayed as latest.</p>
+<pre><code class="hljs css language-ts">getData() {
+
+  <span class="hljs-keyword">this</span>.http$.<span class="hljs-keyword">get</span>(<span class="hljs-string">'...'</span>).then(doSomeRenderingFunc)
+
+}
+
+setTimeout(<span class="hljs-number">2000</span>, getData);
+
+setTimeout(<span class="hljs-number">2500</span>, getData);
+
+...
+</code></pre>
+<p>We expect here that first response will be rendered first and then second one. But in reality, because of network latency, it may be not like that. The second request response can come earlier than the first(old) response data. So the user gets non-appropriate data displayed. This situation is called race-conditions.</p>
+<p>To prevent this with Observable-wrapped requests we can use <a href="https://rxjs-dev.firebaseapp.com/api/operators/concatMap"><strong>concatMap</strong></a> operator (reviewed in advanced course).</p>
+<pre><code class="hljs css language-ts">interval(<span class="hljs-number">500</span>).pipe(
+
+concatMap(() = ajax.get(<span class="hljs-string">'...'</span>))
+
+).subscribe(doSomeRenderingFunc)
+</code></pre>
+<p>In that case next request will be done only after the previous one is handled.</p>
+<blockquote>
+<p>I hope now you've got some vision of what Observables can do. Now lets review where they are used in Angular.</p>
+</blockquote>
+<h2><a class="anchor" aria-hidden="true" id="angular-and-rxjs-observables"></a><a href="#angular-and-rxjs-observables" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Angular and RxJS Observables</h2>
+<p>Angular and RxJS are like a bee and honey. There a lots of places where Angular entities API provides an <code>Observable</code>.</p>
+<p>For example:</p>
+<ul>
+<li><strong>Http requests</strong> in Angular are wrapped in <code>Observables</code>, which allows us easily implement repeat/retry logic and make parallel or subsequent requests.</li>
+<li>Reactive Forms: <strong>FormControls</strong> has a . <strong>valueChanges</strong> Observable property. Now each time the whole form or some specific field has changed - you will be notified.</li>
+<li>@ <strong>ViewChildren</strong> decorator property has a . <strong>changes</strong> Observable API. Now each time the list is re-rendered by Angular - you will know that.</li>
+<li><strong>Interceptors</strong> () - allow to implement additional logic for HTTP requests (like refresh tokens)</li>
+<li><strong>Guards</strong>: can return an <code>Observable</code> of a boolean value to check asynchronously if a user can visit a Route</li>
+<li><strong>Route Resolvers</strong>: do not render a page until the data necessary for it is in place</li>
+</ul>
+<p>And many more.</p>
+<p>You will dig deeper in a later article.</p>
+<p>Hope after reading this article you want to learn more - so lets move on!</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-next button" href="/rxjs-fundamentals-course/docs/part-2"><span class="function-name-prevnext">Part 2. Reactive programming and RxJS</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#what-is-rxjs">What is RxJS</a></li><li><a href="#what-are-observables">What are Observables?</a></li><li><a href="#promises-and-observables">Promises <strong>and</strong> Observables</a><ul class="toc-headings"><li><a href="#promises-vs-observables">Promises <strong>vs</strong> Observables</a></li><li><a href="#1-eager-vs-lazy">#1 Eager vs Lazy</a></li><li><a href="#2-promises-cannot-be-canceled-while-observables-can-be-unsubscribed">#2 Promises cannot be canceled while Observables can be unsubscribed</a></li><li><a href="#3-easy-to-prevent-race-conditions-with-observables-and-hard---with-promises">#3 Easy to prevent race conditions with Observables and hard - with Promises.</a></li></ul></li><li><a href="#angular-and-rxjs-observables">Angular and RxJS Observables</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/rxjs-fundamentals-course/" class="nav-home"><img src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals" width="66" height="58"/></a><div><h5>Open Learning</h5><a href="/rxjs-fundamentals-course/docs/part-1">RxJS Fundamentals</a><a href="https://dev.to/this-is-learning" target="_blank" rel="noreferrer noopener">This is Learning publication</a><a href="https://dev.to/this-is-angular" target="_blank" rel="noreferrer noopener">This is Angular publication</a></div><div><h5>Community</h5><a href="https://discord.gg/ygKzbrBtVn" target="_blank" rel="noreferrer noopener">This is Learning Community Discord</a><a href="https://github.com/this-is-learning">This is Learning GitHub</a><a href="https://github.com/this-is-angular">This is Angular GitHub</a></div><div><h5>Social</h5><a class="github-button" data-icon="octicon-star" data-count-href="/this-is-learning/rxjs-fundamentals-course/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><div class="social"><a href="https://twitter.com/Thisis_Learning" class="twitter-follow-button">Follow @Thisis_Learning</a></div></div></section><section class="copyright">Licensed under CC BY-SA 4.0 by This is Learning</section></footer></div><script>window.twttr=(function(d,s, id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src='https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));</script></body></html>

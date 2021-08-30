@@ -1,0 +1,213 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Part 4. How RxJS is used by Angular · RxJS Fundamentals</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="# How RxJS is used by Angular"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Part 4. How RxJS is used by Angular · RxJS Fundamentals"/><meta property="og:type" content="website"/><meta property="og:url" content="https://this-is-learning.github.io/rxjs-fundamentals-course/"/><meta property="og:description" content="# How RxJS is used by Angular"/><meta property="og:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/rxjs-fundamentals-course/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/rxjs-fundamentals-course/js/scrollSpy.js"></script><link rel="stylesheet" href="/rxjs-fundamentals-course/css/main.css"/><script src="/rxjs-fundamentals-course/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/rxjs-fundamentals-course/"><img class="logo" src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals"/><h2 class="headerTitleWithLogo">RxJS Fundamentals</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/rxjs-fundamentals-course/docs/part-1" target="_self">Course</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Part 4</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 1</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-1">Part 1. RxJS: better async programming</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 2</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-2">Part 2. Reactive programming and RxJS</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 3</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-3">Part 3. The most common RxJS operators</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 4</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-4">Part 4. How RxJS is used by Angular</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 5</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-5">Part 5. Everything is a stream: Pushed-based architecture</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 6</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-6">Part 6. Creational operators</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Part 4. How RxJS is used by Angular</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="how-rxjs-is-used-by-angular"></a><a href="#how-rxjs-is-used-by-angular" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How RxJS is used by Angular</h1>
+<p>Contributors:</p>
+<ul>
+<li>Andrei Gatej</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="how-rxjs-is-used-by-angular-1"></a><a href="#how-rxjs-is-used-by-angular-1" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>How RxJS is used by Angular</h1>
+<p><em>Writer: Andrei Gatej</em></p>
+<p>In this chapter, we're going to expose which parts of Angular are powered by RxJS, along with some practical examples.</p>
+<h2><a class="anchor" aria-hidden="true" id="httpclientmodule"></a><a href="#httpclientmodule" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>HttpClientModule</h2>
+<p><em>If you'd like to follow along, you could open this</em> <a href="https://stackblitz.com/edit/rxjs-basics-http?file=src%2Fapp%2Fapp.component.ts"><em>StackBlitz demo</em></a><em>.</em></p>
+<p>Making requests over the network definitely complies with a well known Observable definition: <em>data which comes over time</em>. With this in mind, an HTTP request can be seen as an Observable that will emit some data at some point in the future. Let's see how it would look like:</p>
+<pre><code class="hljs css language-ts">users$: Observable&lt;<span class="hljs-built_in">any</span>[]&gt; = <span class="hljs-keyword">this</span>.http.get&lt;<span class="hljs-built_in">any</span>[]&gt;(<span class="hljs-keyword">this</span>.url);
+
+<span class="hljs-keyword">constructor</span> (<span class="hljs-params"><span class="hljs-keyword">private</span> http: HttpClient</span>) { }
+</code></pre>
+<p>The <em>HttpClient.get(url)</em> method will perform a GET request to the specified <em>url.</em> This method(and the similar ones, e.g <em>post, put</em> etc...) will return an <em>Observable</em> which will emit once the response is ready and then it will emit a <em>complete notification.</em> This implies that there is <strong>no need</strong> to explicitly unsubscribe from an observable returned from <em>HttpClient.</em></p>
+<p>In order to get a better understanding, here's how you could loosely implement something similar to what the <em>HttpClient</em> does:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">new</span> Observable(<span class="hljs-function">(<span class="hljs-params">subscriber</span>) =&gt;</span> {
+  <span class="hljs-comment">// Make the request here, e.g using `fetch` or `XMLHttpRequest`</span>
+  <span class="hljs-comment">// Then, after the response(`resp`) is ready</span>
+  subscriber.next(resp);
+  subscriber.complete();
+});
+</code></pre>
+<p>Another great feature the <em>HttpClientModule</em> provides is the ability to intercept and alter the <strong>requests</strong> and <strong>their responses.</strong> This can be achieved with <strong>Interceptors.</strong></p>
+<p>For example, this is how an interceptor can be provided:</p>
+<pre><code class="hljs css language-ts">{ provide: HTTP\_INTERCEPTORS, useClass: TokenInterceptor, multi: <span class="hljs-literal">true</span> }
+</code></pre>
+<p>And this is how it might be implemented:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-meta">@Injectable</span>()
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> TokenInterceptor <span class="hljs-keyword">implements</span> HttpInterceptor {
+  intercept(
+    req: HttpRequest&lt;<span class="hljs-built_in">any</span>&gt;,
+    next: HttpHandler
+  ): Observable&lt;HttpEvent&lt;<span class="hljs-built_in">any</span>&gt;&gt; {
+    <span class="hljs-comment">// Altering the incoming request, e.g: adding necessary headers</span>
+    <span class="hljs-keyword">const</span> newReq = req.clone({
+      setHeaders: { Authorization: <span class="hljs-string">"&lt;schema-type&gt; &lt;credentials&gt;"</span> },
+    });
+
+    <span class="hljs-keyword">return</span> next.handle(newReq).pipe(
+      <span class="hljs-comment">// Altering the response</span>
+      <span class="hljs-comment">// Only interested in `Response` events. Others could be: `Sent`, `UploadProgress` etc...</span>
+      filter(<span class="hljs-function">(<span class="hljs-params">e</span>) =&gt;</span> e.type === HttpEventType.Response)
+
+      <span class="hljs-comment">// Can also retry requests, maybe the authorization token expired, so we can use the refresh token to get a new one</span>
+      <span class="hljs-comment">// catchError(err =&gt; handleExpired()),</span>
+    );
+  }
+}
+</code></pre>
+<p>As you can see, interceptors come up with a lot of possibilities. This is possible because RxJS' Observables can be <strong>composed</strong>.</p>
+<p>For example, you might have something like this:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">const</span> be$ = <span class="hljs-keyword">new</span> Observable(<span class="hljs-function">(<span class="hljs-params">subscriber</span>) =&gt;</span> {
+  setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+    <span class="hljs-comment">// After the request is ready</span>
+    subscriber.next({ data: {}, err: <span class="hljs-literal">null</span> });
+    subscriber.complete();
+  }, <span class="hljs-number">3000</span>);
+});
+
+<span class="hljs-comment">// Applying an interceptor</span>
+<span class="hljs-keyword">const</span> intercepted$ = be$.pipe(filter(<span class="hljs-comment">/* ... */</span>), catchError(<span class="hljs-comment">/* ... */</span>));
+
+<span class="hljs-comment">// Applying another interceptor</span>
+<span class="hljs-keyword">const</span> interceptedTwice$ = intercepted$.pipe(<span class="hljs-comment">/* ... */</span>);
+</code></pre>
+<h2><a class="anchor" aria-hidden="true" id="forms"></a><a href="#forms" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Forms</h2>
+<p><em>If you'd like to follow along, you could open this</em> <a href="https://stackblitz.com/edit/rxjs-basics-forms?file=src/app/app.component.ts"><em>StackBlitz demo</em></a><em>.</em></p>
+<p>Sometimes, when working with Angular Forms, you might need to perform certain actions when the <strong>value</strong> or the <strong>status</strong> of a <strong>form control</strong> changes. You can be notified about these events with the help of <em>valueChanges</em> and <em>statusChanges</em>.</p>
+<p>Let's see how they can be used:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">this</span>.valueChangesSub = <span class="hljs-keyword">this</span>.myCtrl.valueChanges.subscribe(<span class="hljs-function">(<span class="hljs-params">v</span>) =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"value changed"</span>, v);
+});
+
+<span class="hljs-keyword">this</span>.statusChangesSub = <span class="hljs-keyword">this</span>.myCtrl.statusChanges.subscribe(<span class="hljs-function">(<span class="hljs-params">v</span>) =&gt;</span> {
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"status changed"</span>, v);
+});
+</code></pre>
+<p>When typing into the input, both the registered callbacks will be called. <em>valueChanges</em> emits when the <strong>control's value</strong> has changed and <em>statusChanges</em> when the <strong>control's status</strong> changed(e.g from <em>INVALID</em> to <em>VALID</em>).</p>
+<p>As with every observable, you can apply <strong>operators</strong> to it. For instance, you might want to be notified only when the current status is different than the previous one:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">this</span>.statusChangesSub = <span class="hljs-keyword">this</span>.myCtrl.statusChanges
+  .pipe(distinctUntilChanged())
+  .subscribe(<span class="hljs-function">(<span class="hljs-params">v</span>) =&gt;</span> {
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"status changed"</span>, v);
+  });
+</code></pre>
+<p>One thing that you should be mindful of is that you <strong>don't</strong> have to unsubscribe from these observables when the component is destroyed because the data producer(e.g <em>valueChanges</em>) belongs to the component in question, thus everything becomes eligible for garbage collection.</p>
+<h2><a class="anchor" aria-hidden="true" id="querying-elements-from-the-dom"></a><a href="#querying-elements-from-the-dom" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Querying elements from the DOM</h2>
+<p><em>If you'd like to follow along, you could open this</em> <a href="https://stackblitz.com/edit/rxjs-basics-query?file=src%2Fapp%2Fapp.component.ts"><em>StackBlitz demo</em></a><em>.</em></p>
+<p>You might be familiar with <em>ViewChildren</em> and <em>ContentChildren</em> decorators. They can be used to query elements from a component's view and from a component's projected content, respectively. Both return a <em>QueryList</em> type.</p>
+<p>One thing that might come handy in certain situations is to be notified about changes that occur in the list obtained, changes such as <strong>addition</strong> or <strong>removal.</strong> This is possible as the <em>QueryList</em> structure exposes a <em>changes</em> property which emits whenever the actions delineated above take place.</p>
+<p>Here is an example of <em>ViewChildren:</em></p>
+<pre><code class="hljs css language-html"><span class="hljs-tag">&lt;<span class="hljs-name">ul</span>&gt;</span>
+  <span class="hljs-tag">&lt;<span class="hljs-name">li</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let _ of [].constructor(total); index as idx"</span> #<span class="hljs-attr">item</span>&gt;</span>
+    {{ idx + 1 }}
+  <span class="hljs-tag">&lt;/<span class="hljs-name">li</span>&gt;</span>
+<span class="hljs-tag">&lt;/<span class="hljs-name">ul</span>&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">hr</span> /&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">br</span> /&gt;</span>
+
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"total = total - 1 &lt; 0 ? 0 : total - 1"</span>&gt;</span>Remove Item<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+<span class="hljs-tag">&lt;<span class="hljs-name">button</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"total = total + 1"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"margin-left: 3rem;"</span>&gt;</span>Add Item<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span>
+</code></pre>
+<p>And the corresponding TS file:</p>
+<pre><code class="hljs css language-ts"><span class="hljs-meta">@Component</span>({ ... })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent {
+  total = <span class="hljs-number">10</span>;
+
+  <span class="hljs-meta">@ViewChildren</span>(<span class="hljs-string">'item'</span>) <span class="hljs-keyword">private</span> items: QueryList&lt;HTMLUListElement&gt;;
+
+  ngAfterViewInit () {
+    <span class="hljs-keyword">this</span>.items.changes.subscribe(<span class="hljs-function"><span class="hljs-params">changes</span> =&gt;</span> {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'changes occurred'</span>, changes);
+    });
+  }
+}
+</code></pre>
+<p>One thing that is worth mentioning is that you don't have to unsubscribe when the component is destroyed as this is handled internally by <em>QueryList.</em></p>
+<h2><a class="anchor" aria-hidden="true" id="routing"></a><a href="#routing" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Routing</h2>
+<p><em>If you'd like to follow along, you could open this</em> <a href="https://stackblitz.com/edit/rxjs-basics-routing?file=src/app/app.module.ts"><em>StackBlitz demo</em></a><em>.</em></p>
+<p>Another significant part where Angular heavily uses RxJS is <strong>routing</strong>.</p>
+<p>For instance, when you want to manage the access to certain routes, you can leverage <strong>guards</strong>.</p>
+<p>Each guard can return, among others, <em>Observables,</em> allowing you to perform complex logic when deciding whether the route should be accessed or not.</p>
+<p>Let's see an example of <em>CanActivate:</em></p>
+<pre><code class="hljs css language-ts">canActivate(
+  route: ActivatedRouteSnapshot,
+  state: RouterStateSnapshot
+): Observable&lt;<span class="hljs-built_in">boolean</span> | UrlTree&gt; | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">boolean</span> | UrlTree&gt; | <span class="hljs-built_in">boolean</span> | UrlTree {
+  <span class="hljs-comment">// The logic might involve Observables</span>
+  <span class="hljs-keyword">return</span> timer(<span class="hljs-number">1000</span>).pipe(
+    map(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-literal">true</span>),
+  );
+}
+</code></pre>
+<p><em>Note: the same concept can be applied to other guards.</em></p>
+<p><em>Observables</em> can also be used when implementing <strong>route resolvers:</strong></p>
+<pre><code class="hljs css language-ts"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> HelloResolver <span class="hljs-keyword">implements</span> Resolve&lt;<span class="hljs-built_in">any</span>&gt; {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> http: HttpClient</span>) {}
+
+  resolve(
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot
+  ): Observable&lt;<span class="hljs-built_in">any</span>&gt; | <span class="hljs-built_in">Promise</span>&lt;<span class="hljs-built_in">any</span>&gt; | <span class="hljs-built_in">any</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.http
+      .get&lt;<span class="hljs-built_in">any</span>&gt;(<span class="hljs-string">"https://jsonplaceholder.typicode.com/posts"</span>)
+      .pipe(map(<span class="hljs-function">(<span class="hljs-params">arr</span>) =&gt;</span> arr.slice(<span class="hljs-number">0</span>, <span class="hljs-number">10</span>)));
+  }
+}
+</code></pre>
+<p>The result of the resolver can then be accessed in the component route's component through the <em>ActivatedRoute.data</em> property.</p>
+<h1><a class="anchor" aria-hidden="true" id="notes"></a><a href="#notes" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Notes</h1>
+<ul>
+<li>I decided not to include <code>toPromise</code> in the <em>HttpClientModule</em> section as it's not specifically related to that module, but to Observables</li>
+</ul>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/rxjs-fundamentals-course/docs/part-3"><span class="arrow-prev">← </span><span class="function-name-prevnext">Part 3. The most common RxJS operators</span></a><a class="docs-next button" href="/rxjs-fundamentals-course/docs/part-5"><span>Part 5. Everything is a stream: Pushed-based architecture</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#httpclientmodule">HttpClientModule</a></li><li><a href="#forms">Forms</a></li><li><a href="#querying-elements-from-the-dom">Querying elements from the DOM</a></li><li><a href="#routing">Routing</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/rxjs-fundamentals-course/" class="nav-home"><img src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals" width="66" height="58"/></a><div><h5>Open Learning</h5><a href="/rxjs-fundamentals-course/docs/part-1">RxJS Fundamentals</a><a href="https://dev.to/this-is-learning" target="_blank" rel="noreferrer noopener">This is Learning publication</a><a href="https://dev.to/this-is-angular" target="_blank" rel="noreferrer noopener">This is Angular publication</a></div><div><h5>Community</h5><a href="https://discord.gg/ygKzbrBtVn" target="_blank" rel="noreferrer noopener">This is Learning Community Discord</a><a href="https://github.com/this-is-learning">This is Learning GitHub</a><a href="https://github.com/this-is-angular">This is Angular GitHub</a></div><div><h5>Social</h5><a class="github-button" data-icon="octicon-star" data-count-href="/this-is-learning/rxjs-fundamentals-course/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><div class="social"><a href="https://twitter.com/Thisis_Learning" class="twitter-follow-button">Follow @Thisis_Learning</a></div></div></section><section class="copyright">Licensed under CC BY-SA 4.0 by This is Learning</section></footer></div><script>window.twttr=(function(d,s, id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src='https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));</script></body></html>

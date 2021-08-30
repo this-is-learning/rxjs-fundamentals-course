@@ -1,0 +1,494 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Part 5. Everything is a stream: Pushed-based architecture · RxJS Fundamentals</title><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="generator" content="Docusaurus"/><meta name="description" content="# Everything is a stream: Pushed-based architecture"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Part 5. Everything is a stream: Pushed-based architecture · RxJS Fundamentals"/><meta property="og:type" content="website"/><meta property="og:url" content="https://this-is-learning.github.io/rxjs-fundamentals-course/"/><meta property="og:description" content="# Everything is a stream: Pushed-based architecture"/><meta property="og:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="https://this-is-learning.github.io/rxjs-fundamentals-course/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/rxjs-fundamentals-course/img/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/default.min.css"/><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/rxjs-fundamentals-course/js/scrollSpy.js"></script><link rel="stylesheet" href="/rxjs-fundamentals-course/css/main.css"/><script src="/rxjs-fundamentals-course/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/rxjs-fundamentals-course/"><img class="logo" src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals"/><h2 class="headerTitleWithLogo">RxJS Fundamentals</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/rxjs-fundamentals-course/docs/part-1" target="_self">Course</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Part 5</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 1</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-1">Part 1. RxJS: better async programming</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 2</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-2">Part 2. Reactive programming and RxJS</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 3</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-3">Part 3. The most common RxJS operators</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 4</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-4">Part 4. How RxJS is used by Angular</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 5</h3><ul class=""><li class="navListItem navListItemActive"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-5">Part 5. Everything is a stream: Pushed-based architecture</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle">Part 6</h3><ul class=""><li class="navListItem"><a class="navItem" href="/rxjs-fundamentals-course/docs/part-6">Part 6. Creational operators</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Part 5. Everything is a stream: Pushed-based architecture</h1></header><article><div><span><h1><a class="anchor" aria-hidden="true" id="everything-is-a-stream-pushed-based-architecture"></a><a href="#everything-is-a-stream-pushed-based-architecture" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Everything is a stream: Pushed-based architecture</h1>
+<p>Contributors:</p>
+<ul>
+<li>Lars Gyrup Brink Nielsen</li>
+</ul>
+<h1><a class="anchor" aria-hidden="true" id="everything-is-a-stream"></a><a href="#everything-is-a-stream" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Everything is a stream</h1>
+<p>By Lars Gyrup Brink Nielsen</p>
+<p>JavaScript started in the browser in 1995. Everything was executed in the same, single thread. Why would it be any different in a time when most computers were only able to run a single thread at a time? Today, the more modern worker APIs run in separate threads to prevent the main thread from blocking and use the power of multithreading that all devices support by now.</p>
+<p>JavaScript evolved as an event-based environment. In the beginning, most events were initiated directly by a user interacting with a web page. Today, very complex and complicated applications are executed in the browser. The event-based model is critical to our way of thinking when developing JavaScript applications.</p>
+<p>For many other mainstream programming languages, events were strapped on as an afterthought late in their lifecycle.</p>
+<p>The DOM has events that bubble up through the element tree from where its emitted all the way to the document root, unless they are intercepted and stopped before they reach the root element.</p>
+<p>What or who initiates events in the DOM? Usually a user interacting with the page. So what can we express with DOM events? Mouse clicks, keypresses, screen drags, screen taps, and selections. There are probably a few more, but you get the idea.</p>
+<p>It turns out that most interesting things that happen in a browser are asynchronous events. An XHR request emits events when it has succeeded or failed. A web socket emits messages or errors. A script element or an image element emits an event once loaded or on errors. A file reader emits events when operations complete, progress, or fail. The list goes on.</p>
+<p>A button can be clicked multiple times, not just once. Every button click happens at a certain point in time, each moment being unique.</p>
+<p>What if we took all those button clicks and put them in a container object that we could pass around or expose to different parts of our application? We would have an object representing button clicks over time. A stream of button clicks.</p>
+<p>It turns out that as most interesting things that happen in JavaScript happen asynchronously and intermingled, it's quite useful to be able to capture cohesive events or values in a stream.</p>
+<p>In fact, we can represent almost anything as a stream. The keys pressed by the user in a certain form control, the number of seconds elapsed (approximately) since the session was started or a button was clicked, or messages in a web socket connection.</p>
+<p>Even an HTTP request can be represented as a stream. It's initialized when the request is fired, then we wait for a single response and finally the stream ends. A stream with only a single value at only a single moment in time, but in fact a stream.</p>
+<p>As we have discussed earlier in this course, in RxJS, observables are the streams of data, the container objects. So of course, the way we represent any piece of data, synchronously or asynchronously, is through observables.</p>
+<p>Here are a few examples of how we can create streams from DOM events.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { fromEvent } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">const</span> leftClick$ = fromEvent(<span class="hljs-built_in">document</span>, <span class="hljs-string">"click"</span>);
+
+<span class="hljs-keyword">const</span> keypress$ = fromEvent(
+  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"form-control"</span>),
+  <span class="hljs-string">"keypress"</span>
+);
+</code></pre>
+<p>RxJS lets us compose these streams by combining them. Now imagine a keylogger that records every keypress. If we had a record button and a stop button, our composed stream would look like this.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { fromEvent } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { exhaustMap, map, takeUntil } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">const</span> recordButtonClick$ = fromEvent(
+  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"record-button"</span>),
+  <span class="hljs-string">"click"</span>
+);
+
+<span class="hljs-keyword">const</span> stopButtonClick$ = fromEvent(
+  <span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">"stop-button"</span>),
+  <span class="hljs-string">"click"</span>
+);
+
+<span class="hljs-keyword">const</span> keypress$ = fromEvent(<span class="hljs-built_in">document</span>.body, <span class="hljs-string">"keypress"</span>);
+
+<span class="hljs-keyword">const</span> keylogger$ = recordButtonClick$.pipe(
+  <span class="hljs-comment">// [1]</span>
+
+  exhaustMap(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span>
+    keypress$.pipe(
+      <span class="hljs-comment">// [2]</span>
+
+      map(<span class="hljs-function">(<span class="hljs-params">event: KeyboardEvent</span>) =&gt;</span> event.key), <span class="hljs-comment">// [3]</span>
+
+      takeUntil(stopButtonClick$) <span class="hljs-comment">// [4]</span>
+    )
+  )
+);
+
+keylogger$.subscribe(<span class="hljs-function">(<span class="hljs-params">key</span>) =&gt;</span> <span class="hljs-built_in">console</span>.log(key));
+</code></pre>
+<p>What's going on here? The first few observables are similar to the ones we just discussed, except <code>keypress$</code> catches all keypresses when the browser tab is active.</p>
+<p>The <code>keylogger$</code> is an observable composed from the three DOM-event based observables. First we listen for a click on the record button (1). Then we start listening for keypresses (2) and map the keypress events to a string with the key in question (3). We stop listening when the stop button is clicked (4).</p>
+<p>Finally, we output the emitted values from <code>keylogger$</code>.</p>
+<h2><a class="anchor" aria-hidden="true" id="service-with-a-subject"></a><a href="#service-with-a-subject" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Service with a subject</h2>
+<p>Now that we have learnt about constructing our applications using the <em>Everything is a stream</em> mantra, we can consider other use cases that are a good fit for application frameworks such as Angular and React.</p>
+<p>The <em>Service with a subject</em> pattern is the first stage of application state management for reactive applications. We create a class that uses RxJS Subjects to manage shared state.</p>
+<p>Let's look at a user service which exposes observable state about user details and whether a user is authenticated. Additionally, it allows a user to log in and log out.</p>
+<p>In this example, we will communicate with a real web API and query demo users to simulate a log in. Any username listed in <a href="https://jsonplaceholder.typicode.com/users">https://jsonplaceholder.typicode.com/users</a> will allow the user to log in.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { BehaviorSubject, Observable, of, throwError } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { fromFetch } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/fetch"</span>;
+
+<span class="hljs-keyword">import</span> {
+  catchError,
+  map,
+  mapTo,
+  shareReplay,
+  switchMap,
+  tap,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs/operators"</span>;
+
+<span class="hljs-keyword">interface</span> User {
+  readonly email: <span class="hljs-built_in">string</span>;
+
+  readonly name: <span class="hljs-built_in">string</span>;
+
+  readonly username: <span class="hljs-built_in">string</span>;
+}
+
+<span class="hljs-keyword">class</span> UserService {
+  <span class="hljs-keyword">private</span> user = <span class="hljs-keyword">new</span> BehaviorSubject&lt;User | <span class="hljs-literal">undefined</span>&gt;(<span class="hljs-literal">undefined</span>); <span class="hljs-comment">// [1]</span>
+
+  user$: Observable&lt;User | <span class="hljs-literal">undefined</span>&gt; = <span class="hljs-keyword">this</span>.user.asObservable(); <span class="hljs-comment">// [2]</span>
+
+  isAuthenticated$: Observable&lt;<span class="hljs-built_in">boolean</span>&gt; = <span class="hljs-keyword">this</span>.user.pipe(
+    <span class="hljs-comment">// [3]</span>
+
+    map(<span class="hljs-function">(<span class="hljs-params">user</span>) =&gt;</span> user !== <span class="hljs-literal">undefined</span>) <span class="hljs-comment">// [4]</span>
+  );
+
+  logIn(username: <span class="hljs-built_in">string</span>, password: <span class="hljs-built_in">string</span>): Observable&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-keyword">return</span> fromFetch(
+      <span class="hljs-string">"[https://jsonplaceholder.typicode.com/users](https://jsonplaceholder.typicode.com/users)"</span>
+    ).pipe(
+      <span class="hljs-comment">// [5]</span>
+
+      switchMap(<span class="hljs-function">(<span class="hljs-params">response</span>) =&gt;</span> response.json()), <span class="hljs-comment">// [6]</span>
+
+      map(<span class="hljs-function">(<span class="hljs-params">users: ReadonlyArray&lt;User&gt;</span>) =&gt;</span>
+        users.find(<span class="hljs-function">(<span class="hljs-params">user</span>) =&gt;</span> user.username === username)
+      ), <span class="hljs-comment">// [7]</span>
+
+      switchMap(<span class="hljs-function">(<span class="hljs-params">user</span>) =&gt;</span>
+        user
+          ? of(user)
+          : throwError(<span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">`No user with username "<span class="hljs-subst">${username}</span>"`</span>))
+      ), <span class="hljs-comment">// [8]</span>
+
+      tap({
+        error: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>.user.next(<span class="hljs-literal">undefined</span>), <span class="hljs-comment">// [9]</span>
+
+        next: <span class="hljs-function">(<span class="hljs-params">user</span>) =&gt;</span> <span class="hljs-keyword">this</span>.user.next(user), <span class="hljs-comment">// [10]</span>
+      }),
+
+      mapTo(<span class="hljs-literal">undefined</span>) <span class="hljs-comment">// [11]</span>
+    );
+  }
+
+  logOut(): Observable&lt;<span class="hljs-built_in">void</span>&gt; {
+    <span class="hljs-keyword">return</span> fromFetch(
+      <span class="hljs-string">"[https://jsonplaceholder.typicode.com](https://jsonplaceholder.typicode.com/)"</span>
+    ).pipe(
+      <span class="hljs-comment">// [12]</span>
+
+      catchError(<span class="hljs-function">(<span class="hljs-params">error</span>) =&gt;</span> of(error)), <span class="hljs-comment">// [13]</span>
+
+      tap(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-keyword">this</span>.user.next(<span class="hljs-literal">undefined</span>)), <span class="hljs-comment">// [14]</span>
+
+      mapTo(<span class="hljs-literal">undefined</span>) <span class="hljs-comment">// [15]</span>
+    );
+  }
+}
+</code></pre>
+<p>The private property <code>user</code> (1) holds either a user data structure or <code>undefined</code> depending on whether a user is logged in or not. It's based on a <code>BehaviorSubject</code> which always has an initial state, in this case <code>undefined</code>.</p>
+<p>The public observable <code>user$</code> property (2) exposes user details when a user is logged in.</p>
+<p>The public observable <code>isAuthenticated$</code> property (3) is a computed observable based on the <code>user</code> behavior subject. It emits the values <code>true</code> or <code>false</code> based on whether a user is logged in or not (4).</p>
+<p>That's our observable pieces of state. Let's walk through the <code>logIn</code> method.</p>
+<p>First, we create an observable from an HTTP request using <code>fromFetch</code> (5). Then we parse the HTTP response as JSON (6).</p>
+<p>As this is a demo, we just look for a user with a username matching the specified one between the ones in the HTTP response (7). If no user with that username exists, we emit an error in our stream (8).</p>
+<p>If an error occurs, logging in has failed. When this happens, we clear the user state (9). If logging in succeeds, we set the user state to the user data structure identified in the response (10).</p>
+<p>Finally, we make sure the returned observable emits <code>undefined</code> on success before completing (11).</p>
+<p>The <code>logOut</code> method is much simpler. We do some arbitrary HTTP request because this is a demo (12). If the request fails, we convert the error to an observable to avoid that the stream fails (13).</p>
+<p>For demo purposes, we always clear the user state (14) and make sure that <code>undefined</code> is emitted before completing (15).</p>
+<p>What does this service allow us to do? It allows us to share user-related state and the methods to change that state from anywhere in our application. Pieces of UI or other services interested in user-related state can subscribe to the exposed observable properties.</p>
+<p>Pieces of UI can use the methods to log in or log out based on user interactions.</p>
+<h2><a class="anchor" aria-hidden="true" id="reactive-application-state-management-frameworks"></a><a href="#reactive-application-state-management-frameworks" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Reactive application state management frameworks</h2>
+<p>We have already seen how we can use RxJS subjects to manage shared state. However, many pieces of state share the same, tedious recipe and it can be difficult to maintain the same patterns across a large codebase or between multiple teams. We risk a fragmented codebase where different patterns have been used depending on the time the state services were made or who made them.</p>
+<p>You might have heard about application state management frameworks. Through conventions and patterns, they help us structure the shared in our applications. Many are based on the flux or redux patterns where we have an action which is an event that signals that state should be updated or some side effect should be triggered. Such an event can be dispatched from anywhere within our applications.</p>
+<p>In such frameworks, we usually also have a reducer which is a function that reduces the current state and an action to a new state. Finally, we can subscribe to state updates from a so-called <em>store</em>. In this way, we decouple data updates and UI updates so that both can happen in multiple places without tight coupling.</p>
+<p>For React, an idiomatic example of this is Redux. For Angular, it is NgRx Store. There are countless others, for example we can combine Redux with Redux-Observable to create and trigger side effects based on RxJS. However, Redux in itself doesn't use RxJS, so we'll go with Akita as a case study since it is an application framework-agnostic state management framework based on RxJS.</p>
+<p>We will disregard side effects in this example to keep it simple.</p>
+<p>Let's first look at our domain model, the <code>Book</code> interface and the related factory, <code>createBook</code>.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// book.ts</span>
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> Book {
+  author: <span class="hljs-built_in">string</span>;
+  price: <span class="hljs-built_in">number</span>;
+  title: <span class="hljs-built_in">string</span>;
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createBook</span>(<span class="hljs-params">params: Partial&lt;Book&gt;</span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    ...params,
+  } <span class="hljs-keyword">as</span> Book;
+}
+</code></pre>
+<p>Every book in our application state has an author, a price and a title. The factory allows us to create a book data structure with some or all properties defined.</p>
+<p>The next thing we need in Akita is a store. We will name it <code>BookStore</code>.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// books.store.ts</span>
+
+<span class="hljs-keyword">import</span> { Store, StoreConfig } <span class="hljs-keyword">from</span> <span class="hljs-string">"@datorama/akita"</span>;
+
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">"./book"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">interface</span> BooksState {
+  books: Book[];
+}
+
+<span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">createInitialState</span>(<span class="hljs-params"></span>): <span class="hljs-title">BooksState</span> </span>{
+  <span class="hljs-keyword">return</span> {
+    books: [
+      {
+        author: <span class="hljs-string">"Paul P. Daniels and Luis Atencio"</span>,
+        price: <span class="hljs-number">33.65</span>,
+        title: <span class="hljs-string">"RxJS in Action"</span>,
+      },
+      {
+        author: <span class="hljs-string">"Randall Koutnik"</span>,
+        price: <span class="hljs-number">41.78</span>,
+        title:
+          <span class="hljs-string">"Build Reactive Websites with RxJS: Master Observables and Wrangle Events"</span>,
+      },
+      {
+        author: <span class="hljs-string">"Sergi Mansilla"</span>,
+        price: <span class="hljs-number">32.95</span>,
+        title:
+          <span class="hljs-string">"Reactive Programming with RxJS 5: Untangle Your Asynchronous JavaScript Code"</span>,
+      },
+    ],
+  };
+}
+
+<span class="hljs-meta">@StoreConfig</span>({ name: <span class="hljs-string">"books"</span> })
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BooksStore <span class="hljs-keyword">extends</span> Store&lt;BooksState&gt; {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"></span>) {
+    <span class="hljs-keyword">super</span>(createInitialState()); <span class="hljs-comment">// [1]</span>
+  }
+}
+</code></pre>
+<p>First we declare the interface of the shared state related to books, <code>BooksState</code>. In this simple example, it only contains an array of all the books in our application in the <code>books</code> property.</p>
+<p>Next, we have the <code>createInitialState</code> factory which is used to hydrate the state of our books store (1).</p>
+<p>The <code>BooksStore</code> only contains configuration on top of the base <code>Store</code> class from Akita.</p>
+<p>Now we need a books query class to select pieces of state from the books store.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// books.query.ts</span>
+
+<span class="hljs-keyword">import</span> { Query } <span class="hljs-keyword">from</span> <span class="hljs-string">"@datorama/akita"</span>;
+<span class="hljs-keyword">import</span> { Observable } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { BooksState, BooksStore } <span class="hljs-keyword">from</span> <span class="hljs-string">"./books.store"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BooksQuery <span class="hljs-keyword">extends</span> Query&lt;BooksState&gt; {
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">protected</span> store: BooksStore</span>) {
+    <span class="hljs-keyword">super</span>(store);
+  }
+
+  books$: Observable&lt;Book[]&gt; = <span class="hljs-keyword">this</span>.select(<span class="hljs-function">(<span class="hljs-params">state</span>) =&gt;</span> state.books);
+}
+</code></pre>
+<p>The <code>BooksQuery</code> class exposes observables properties that selects or computes state based on one or more pieces of state from the books store.</p>
+<p>That's all the state we need for a simple application.</p>
+<p>The piece we're skipping here is side effects and mutations. If we wanted to asynchronously load books from a server or allow the user to add, delete or edit books, we would create a <code>BooksService</code> class which would in turn use the <code>BooksStore#update</code> method to update the books state. Akita even has base classes for managing collections called <code>EntityStore</code> and <code>EntityQuery</code> that we can use instead of the <code>Store</code> and <code>Query</code> base classes.</p>
+<h2><a class="anchor" aria-hidden="true" id="a-reactive-react-application"></a><a href="#a-reactive-react-application" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>A reactive React application</h2>
+<p>Now we will build on top of Akita's state management with simple React components and an RxJS-compatible hook.</p>
+<p>Let's start with the innermost component, the <code>Book</code> component.</p>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// Book.jsx</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> Book = <span class="hljs-function">(<span class="hljs-params">{ author, price, title }</span>) =&gt;</span> (
+  <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">div</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"book"</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">h1</span>&gt;</span>{title}<span class="hljs-tag">&lt;/<span class="hljs-name">h1</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>By {author}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span>Price: USD {price}<span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span>
+  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span>
+);
+</code></pre>
+<p>This is a simple functional presentational component. It accepts author, price and title props and renders them in a simple HTML structure.</p>
+<p>Next is the <code>BookList</code> component.</p>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// BookList.jsx</span>
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">"./book"</span>;
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> BookList = <span class="hljs-function">(<span class="hljs-params">{ books }</span>) =&gt;</span>
+  books.map(<span class="hljs-function">(<span class="hljs-params">book</span>) =&gt;</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Book</span> <span class="hljs-attr">key</span>=<span class="hljs-string">{book.title}</span> {<span class="hljs-attr">...book</span>} /&gt;</span></span>);
+</code></pre>
+<p>The book list component is another functional presentational component that accepts a <code>books</code> prop which is an array of book data structures. It maps the array into a list of <code>Book</code> components with the book title as the list key because we didn't include any other identifier. All the properties of the book data structure is spread as props on the <code>Book</code> component.</p>
+<p>The final component is the <code>BooksPage</code> which is the container of the state.</p>
+<pre><code class="hljs css language-jsx"><span class="hljs-comment">// BooksPage.jsx</span>
+
+<span class="hljs-keyword">import</span> useSelector <span class="hljs-keyword">from</span> <span class="hljs-string">"@nitor-infotech/rxjs-use-selector"</span>;
+
+<span class="hljs-keyword">import</span> React <span class="hljs-keyword">from</span> <span class="hljs-string">"react"</span>;
+
+<span class="hljs-keyword">const</span> booksStore = <span class="hljs-keyword">new</span> BooksStore();
+
+<span class="hljs-keyword">const</span> booksQuery = <span class="hljs-keyword">new</span> BooksQuery(booksStore);
+
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> BooksPage = <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
+  <span class="hljs-keyword">const</span> books = useSelector(booksQuery.books$, []); <span class="hljs-comment">// [1]</span>
+
+  <span class="hljs-keyword">return</span> <span class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">Books</span> <span class="hljs-attr">books</span>=<span class="hljs-string">{books}</span> /&gt;</span></span>;
+};
+</code></pre>
+<p>The books page is a functional container component. It uses the <code>useSelector</code> to get updates from the observable property <code>BooksQuery#books$</code> (1).</p>
+<p>If the books query was to be reused in other places in our application, we would initialize it in a <code>booksQuery</code> constant in the <code>books.query.ts</code> file.</p>
+<p>With the snapshot of the <code>books</code> state, our component renders a <code>Books</code> component and passes the books array to its <code>books</code> prop.</p>
+<h2><a class="anchor" aria-hidden="true" id="a-reactive-angular-application"></a><a href="#a-reactive-angular-application" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>A reactive Angular application</h2>
+<p>Let's build the same simple components in Angular for comparison.</p>
+<p>We start out with the <code>BookComponent</code>.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// book.component.ts</span>
+
+<span class="hljs-keyword">import</span> {
+  ChangeDetectionStrategy,
+  Component,
+  HostBinding,
+  Input,
+} <span class="hljs-keyword">from</span> <span class="hljs-string">"@angular/core"</span>;
+
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">"./book"</span>;
+
+<span class="hljs-meta">@Component</span>({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
+  selector: <span class="hljs-string">"books-book"</span>,
+
+  template: <span class="hljs-string">`
+    &lt;h1&gt;{{ book.title }}&lt;/h1&gt;
+
+    &lt;p&gt;By {{ book.author }}&lt;/p&gt;
+
+    &lt;p&gt;Price: USD {{ book.price }}&lt;/p&gt;
+  `</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BookComponent {
+  <span class="hljs-meta">@Input</span>()
+  book: Book;
+
+  <span class="hljs-meta">@HostBinding</span>(<span class="hljs-string">"class"</span>)
+  hostClassList = <span class="hljs-string">"book"</span>;
+
+  <span class="hljs-meta">@HostBinding</span>(<span class="hljs-string">"style"</span>)
+  hostStyle = <span class="hljs-string">"display: block;"</span>;
+}
+</code></pre>
+<p>The presentational book component accepts a <code>Book</code> data structure as an input property and displays its properties in its component template. We use host bindings to apply style to the custom host element.</p>
+<p>Note that we used the <code>OnPush</code> change detection strategy as our component only needs to be dirty checked when the reference of its input property changes.</p>
+<p>Next, let's take a look at the <code>BookListComponent</code>.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// book-list.component.ts</span>
+
+<span class="hljs-keyword">import</span> { ChangeDetectionStrategy, Component, Input } <span class="hljs-keyword">from</span> <span class="hljs-string">"@angular/core"</span>;
+
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">"./book"</span>;
+
+<span class="hljs-meta">@Component</span>({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
+  selector: <span class="hljs-string">"books-list"</span>,
+
+  template: <span class="hljs-string">`
+    &lt;books-book
+      *ngFor="let book of books; trackBy: trackBookTitle"
+      [book]="book"
+    &gt;&lt;/books-book&gt;
+  `</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BookListComponent {
+  <span class="hljs-meta">@Input</span>()
+  books: Book[];
+
+  trackBookTitle(index: <span class="hljs-built_in">number</span>, item: book): <span class="hljs-built_in">string</span> {
+    <span class="hljs-keyword">return</span> book.title;
+  }
+}
+</code></pre>
+<p>The book list component accepts a book array, loops over them and creates a list of book components which are passed the individual book data structures.</p>
+<p>Similar to the book component, we use the <code>OnPush</code> change detection strategy as the <code>BookListComponent</code> is a presentational component that only needs to be dirty checked when the books array reference changes. This requires working with the array in an immutable way, but this is a common practice in application state management.</p>
+<p>The last component is the <code>BooksPageComponent</code> which is implemented like this:</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// books-page.component.ts</span>
+
+<span class="hljs-keyword">import</span> { ChangeDetectionStrategy, Component } <span class="hljs-keyword">from</span> <span class="hljs-string">"@angular/core"</span>;
+
+<span class="hljs-keyword">import</span> { Observable } <span class="hljs-keyword">from</span> <span class="hljs-string">"rxjs"</span>;
+
+<span class="hljs-keyword">import</span> { Book } <span class="hljs-keyword">from</span> <span class="hljs-string">"./book"</span>;
+
+<span class="hljs-meta">@Component</span>({
+  changeDetection: ChangeDetectionStrategy.OnPush,
+
+  selector: <span class="hljs-string">"books-page"</span>,
+
+  template: <span class="hljs-string">` &lt;books-list [books]="books$ | async"&gt;&lt;/books-list&gt; `</span>,
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BooksPageComponent {
+  books$: Observable&lt;Book[]&gt; = <span class="hljs-keyword">this</span>.booksQuery.books$;
+
+  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> booksQuery: BooksQuery</span>) {}
+}
+</code></pre>
+<p>The books page component is a container component that provides the books state to its child component, the <code>BookListComponent</code>.</p>
+<p>We inject the <code>BooksQuery</code> service and expose its observable <code>books$</code> property in the component model. This property is then passed through the async pipe before being bound to the <code>books</code> input property of the book list component.</p>
+<p>We can also use the <code>OnPush</code> change detection strategy for this component even though it is a container component. The async pipe will mark it as dirty and the NgZone will schedule a change detection cycle every time the <code>books$</code> observable emits a value.</p>
+<p>In Angular we also need a declaring Angular module. In our case, it's the <code>BooksModule</code> which we will walk through next.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-comment">// books.module.ts</span>
+
+<span class="hljs-keyword">import</span> { CommonModule } <span class="hljs-keyword">from</span> <span class="hljs-string">"@angular/common"</span>;
+
+<span class="hljs-keyword">import</span> { NgModule } <span class="hljs-keyword">from</span> <span class="hljs-string">"@angular/core"</span>;
+
+<span class="hljs-keyword">import</span> { BookComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./book.component.ts"</span>;
+
+<span class="hljs-keyword">import</span> { BookListComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./book-list.component"</span>;
+
+<span class="hljs-keyword">import</span> { BooksPageComponent } <span class="hljs-keyword">from</span> <span class="hljs-string">"./books-page.component"</span>;
+
+<span class="hljs-meta">@NgModule</span>({
+  declarations: [
+    <span class="hljs-comment">// [1]</span>
+
+    BookComponent,
+
+    BookListComponent,
+
+    BooksPageComponent,
+  ],
+
+  imports: [
+    CommonModule, <span class="hljs-comment">// [2]</span>
+  ],
+
+  providers: [
+    <span class="hljs-comment">// [3]</span>
+
+    BooksStore,
+
+    {
+      provide: BooksQuery,
+
+      deps: [BooksStore],
+
+      useFactory: <span class="hljs-function">(<span class="hljs-params">booksStore: BooksStore</span>) =&gt;</span> <span class="hljs-keyword">new</span> BooksQuery(booksStore), <span class="hljs-comment">// [4]</span>
+    },
+  ],
+})
+<span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BooksModule {}
+</code></pre>
+<p>The books Angular module declares all of our components (1) and imports the <code>CommonModule</code> (2) so that the components can use the <code>AsyncPipe</code> and the <code>NgFor</code> directive.</p>
+<p>Because we didn't add <code>Injectable</code> decorators to the BooksStore and BooksQuery services, we need to add providers (3) to be able to inject the books query into our books page component.</p>
+<p>We have to use a factory provider (4) for the <code>BooksQuery</code> service because it depends on the <code>BooksStore</code> service.</p>
+<h2><a class="anchor" aria-hidden="true" id="conclusion"></a><a href="#conclusion" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Conclusion</h2>
+<p>That's it for the &quot;Everything is a stream&quot; chapter. I hope you enjoyed learning about concrete reactive UI use cases.</p>
+<p>Today we learned about how to capture DOM events as observable streams. We saw an example composing streams into another stream in a declarative way.</p>
+<p>We built a user service with a subject to manage two pieces of state. We then discussed how we can use a state management framework like Akita to structure our state.</p>
+<p>Finally, we first created a page of React components which got their state from an Akita service. Then we created the same page of components using Angular, still reusing the same Akita service.</p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/rxjs-fundamentals-course/docs/part-4"><span class="arrow-prev">← </span><span class="function-name-prevnext">Part 4. How RxJS is used by Angular</span></a><a class="docs-next button" href="/rxjs-fundamentals-course/docs/part-6"><span>Part 6. Creational operators</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#service-with-a-subject">Service with a subject</a></li><li><a href="#reactive-application-state-management-frameworks">Reactive application state management frameworks</a></li><li><a href="#a-reactive-react-application">A reactive React application</a></li><li><a href="#a-reactive-angular-application">A reactive Angular application</a></li><li><a href="#conclusion">Conclusion</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/rxjs-fundamentals-course/" class="nav-home"><img src="/rxjs-fundamentals-course/img/favicon.ico" alt="RxJS Fundamentals" width="66" height="58"/></a><div><h5>Open Learning</h5><a href="/rxjs-fundamentals-course/docs/part-1">RxJS Fundamentals</a><a href="https://dev.to/this-is-learning" target="_blank" rel="noreferrer noopener">This is Learning publication</a><a href="https://dev.to/this-is-angular" target="_blank" rel="noreferrer noopener">This is Angular publication</a></div><div><h5>Community</h5><a href="https://discord.gg/ygKzbrBtVn" target="_blank" rel="noreferrer noopener">This is Learning Community Discord</a><a href="https://github.com/this-is-learning">This is Learning GitHub</a><a href="https://github.com/this-is-angular">This is Angular GitHub</a></div><div><h5>Social</h5><a class="github-button" data-icon="octicon-star" data-count-href="/this-is-learning/rxjs-fundamentals-course/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a><div class="social"><a href="https://twitter.com/Thisis_Learning" class="twitter-follow-button">Follow @Thisis_Learning</a></div></div></section><section class="copyright">Licensed under CC BY-SA 4.0 by This is Learning</section></footer></div><script>window.twttr=(function(d,s, id){var js,fjs=d.getElementsByTagName(s)[0],t=window.twttr||{};if(d.getElementById(id))return t;js=d.createElement(s);js.id=id;js.src='https://platform.twitter.com/widgets.js';fjs.parentNode.insertBefore(js, fjs);t._e = [];t.ready = function(f) {t._e.push(f);};return t;}(document, 'script', 'twitter-wjs'));</script></body></html>
