@@ -1,18 +1,16 @@
+---
+id: part-2
+title: Part 2. Reactive programming and RxJS
+---
+
 # Reactive programming and RxJS
 
 Contributors:
 
 - Nate Lapinski
 
-##
+In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as:
 
-# Fundamentals of RxJS
-
-Chapter 2: Reactive Programming with RxJS
-
-By: Nate Lapinski
-
-In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as: 
 - What is declarative programming ?
 - What is the Observer pattern, and how does it relate to the Iterator pattern ?
 
@@ -87,25 +85,26 @@ For now, it's sufficient to think of "reactive" programming as being able to wor
 The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener) :
 
 ```js
-document.getElementById('test').addEventListener('click', event => {
-    console.log(event.target);
+document.getElementById("test").addEventListener("click", (event) => {
+  console.log(event.target);
 });
 ```
+
 This event listener is producing a stream of values, values emitted over time at each user click, and this stream virtually never completes.
 
 When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become had to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).
 
 ```js
-document.getElementById('test').addEventListener('click', event => {
-    console.log(event.target);
-    setTimeout(() => {
-            $.ajax({params})
-            .then(res => {
-                // deal with result
-            });
-    }, 400);
+document.getElementById("test").addEventListener("click", (event) => {
+  console.log(event.target);
+  setTimeout(() => {
+    $.ajax({ params }).then((res) => {
+      // deal with result
+    });
+  }, 400);
 });
 ```
+
 In this pseudo code, we can see callback being nested, and we see that this will cause issues very soon, like _what happens if user clicks multiple times ?_ or _how do we cancel the operation ?_
 
 In order to deal with these streams of data, RxJs will introduce much more elegant and powerful tools such as Observables that will be discussed in the next section.
@@ -145,9 +144,9 @@ setInterval(() => {
 }, 1000);
 ```
 
-## The classic observer pattern has been a staple of web development for many years. However, it provides no way of containerizing events, meaning we can't compose streams out of subject events. Ideally, we'd have some data structure that enables us to do this.
+> The classic observer pattern has been a staple of web development for many years. However, it provides no way of containerizing events, meaning we can't compose streams out of subject events. Ideally, we'd have some data structure that enables us to do this.
 
-## RxJS improves upon this classical observer pattern by introducing a more robust interface for observers, one that supports not just a method for publishing data (onNext), but also methods for notifying observers of errors (onError), as well as when there is no more data to consume (onComplete). In doing this, the RxJS makes the observer pattern symmetric to the iterator pattern, in some sense.
+> RxJS improves upon this classical observer pattern by introducing a more robust interface for observers, one that supports not just a method for publishing data (onNext), but also methods for notifying observers of errors (onError), as well as when there is no more data to consume (onComplete). In doing this, the RxJS makes the observer pattern symmetric to the iterator pattern, in some sense.
 
 Soon, we'll see how to implement a simple Observable class.
 
@@ -241,5 +240,3 @@ obs.subscribe(console.log); // prints 1,2,3,4
 ## Operators - composition with Observables
 
 Way back in the section on declarative and imperative programming, we talked about Array.prototype's map function. We saw that it lets us apply a function to each element in an array. More generally, a map applies a transformation function (in our example, add1) over some container (in our example, the array x). RxJS has its own map. It's an example of an _operator_. In the case of RxJS, the container is not an array but an observable. Other than that, many of the concepts are similar! ( **Edit: In a more advanced guide, it might be fun to talk about the difference between array's map, which will map over every element before moving to the next operation, and Observables, which iirc are transducers and instead process a single element through each operator in the pipeline before moving on** )
-
-TODO: Add more details using map and filter as examples, and maybe show some sample implementations. Talk about how operators subscribe to one another internally, when composed together.

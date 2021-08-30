@@ -19,7 +19,11 @@ Answers: setTimeout, Promises, async/await - why are these not an answer?
 Why not Promises? Promises vs Observables (what is similar and how they differ?) Light comparison (then vs subscribe, catch vs catchError, lazy vs eager, etc)
 (writer - Oleksandr Poshtaruk)
 
-1. Reactive programming and RxJS:
+Links for ideas (not part of the article - possibly for 'read more' section)
+
+[https://itnext.io/promises-vs-observables-for-angularjs-to-angular-migration-1161afacef7e](https://itnext.io/promises-vs-observables-for-angularjs-to-angular-migration-1161afacef7e)
+
+2. Reactive programming and RxJS:
    (writer - Nate Lapinski)
 
 The building blocks of RxJS (need more clarification)
@@ -33,9 +37,11 @@ The building blocks of RxJS (need more clarification)
 - Subjects
 - Operators - a real RxJS power (I'll use map and filter as basic examples, and explain how operators are "linked" to each other when composed together)
 
-1. mostly used operators: map, catchError, distinctUntilChanged, filter, skip, first, take, combineLatest, [withLastestFrom] (writer - Fox)
+TODO: Add more details using map and filter as examples, and maybe show some sample implementations. Talk about how operators subscribe to one another internally, when composed together.
 
-2. How RxJS is used by Angular: (writer - Andrei Gatej)
+3. mostly used operators: map, catchError, distinctUntilChanged, filter, skip, first, take, combineLatest, [withLastestFrom] (writer - Fox)
+
+4. How RxJS is used by Angular: (writer - Andrei Gatej)
 
 - http (the simiplest + repeat/retry, mention .toPromise )
 - Forms (valueChanges)
@@ -44,7 +50,11 @@ The building blocks of RxJS (need more clarification)
 - Guards
 - Route Resolvers
 
-1. Everything is a stream. Pushed based architecture: (writer - Lars Gyrup Brink Nielsen)
+# Notes
+
+- I decided not to include `toPromise` in the _HttpClientModule_ section as it's not specifically related to that module, but to Observables
+
+5. Everything is a stream: Pushed based architecture: (writer - Lars Gyrup Brink Nielsen)
 
 (mention application state management principles - very beginner staff)
 
@@ -53,7 +63,9 @@ The building blocks of RxJS (need more clarification)
 
 - Also mention ngxs, Akita for homework
 
-6. What is next?
+6. Creational operators
+
+7. What is next?
    (Links to help:
    [https://twitter.com/thekiba_io/status/1136908291366408192](https://twitter.com/thekiba_io/status/1136908291366408192)
    [https://t.co/YDMpsKVgwN?amp=1](https://t.co/YDMpsKVgwN?amp=1)

@@ -1,3 +1,8 @@
+---
+id: part-5
+title: Part 5. Everything is a stream: Pushed-based architecture
+---
+
 # Everything is a stream: Pushed-based architecture
 
 Contributors:
@@ -5,8 +10,6 @@ Contributors:
 - Lars Gyrup Brink Nielsen
 
 # Everything is a stream
-
-By Lars Gyrup Brink Nielsen
 
 JavaScript started in the browser in 1995. Everything was executed in the same, single thread. Why would it be any different in a time when most computers were only able to run a single thread at a time? Today, the more modern worker APIs run in separate threads to prevent the main thread from blocking and use the power of multithreading that all devices support by now.
 

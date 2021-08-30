@@ -1,3 +1,8 @@
+---
+id: part-6
+title: Part 6. Creational operators
+---
+
 # Creational operators
 
 The following example demonstrates how to manually create an `Observable`:

@@ -1,3 +1,8 @@
+---
+id: part-4
+title: Part 4. How RxJS is used by Angular
+---
+
 # How RxJS is used by Angular
 
 Contributors:
@@ -208,7 +213,3 @@ export class HelloResolver implements Resolve<any> {
 ```
 
 The result of the resolver can then be accessed in the component route's component through the _ActivatedRoute.data_ property.
-
-# Notes
-
-- I decided not to include `toPromise` in the _HttpClientModule_ section as it's not specifically related to that module, but to Observables
