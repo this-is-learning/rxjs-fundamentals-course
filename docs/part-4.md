@@ -1,3 +1,8 @@
+---
+id: part-4
+title: Part 4. How RxJS is used by Angular
+---
+
 # How RxJS is used by Angular
 
 Contributors:

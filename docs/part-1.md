@@ -1,3 +1,8 @@
+---
+id: part-1
+title: Part 1. RxJS: better async programming
+---
+
 # RxJS: better async programming
 
 Contributors:
@@ -90,13 +95,13 @@ a) Array of future values, which are spreaded over time - this may sound complic
 Let's take a usual array - its values are there instantly:
 
 ```ts
-[1, 2, 3, 4, 5] // we can access all values at once - they are already there
+[1, 2, 3, 4, 5]; // we can access all values at once - they are already there
 ```
 
 We can transform these values as well:
 
 ```ts
-[1, 2, 3, 4, 5].map(x => x + 1) // 2,3,4,5,6
+[1, 2, 3, 4, 5].map((x) => x + 1); // 2,3,4,5,6
 ```
 
 This is very similar to `Observables` - the only difference being that for an `Observable` the values are in place now and some of the values will be received later.
@@ -113,7 +118,7 @@ If we talk about arrays - we get any value when we want it.
 
 ```ts
 const someArray = [1, 2, 3];
-someArray[i]
+someArray[i];
 ```
 
 But in the case of `Observables` (where values are delivered in the future), the receiver (which is called subscriber or observer- more about it in the next chapter) cannot control when the producer will emit values.
@@ -128,9 +133,9 @@ Now let's compare Promises and Observables.
 
 They have some similarities that will help us understand Observables.
 
-The main similarity between them is that both of them represent a result of an async operation and how it is being handled. Both `Promises` and `Observables` operate with data that isn't available right now but will arrive in the future. So what's the main difference then? 
+The main similarity between them is that both of them represent a result of an async operation and how it is being handled. Both `Promises` and `Observables` operate with data that isn't available right now but will arrive in the future. So what's the main difference then?
 
-The thing is, `Promises` are only one particular case of async operation - a singular operation with a final and conclusive result. What does that mean? Let's take a look at a standard HTTP request - how is it invoked and resolved? Well, we call a URL using one of the HTTP methods, and get a `Promise` that will invoke the callback to the &quot;then&quot; method when data arrives (this is called &quot;resolving a `Promise`&quot;), or, if there has been any kind of error during the request, call the callback provided to the &quot;catch&quot; method (this is called &quot;rejecting a `Promise`&quot;). Okay, so this is an operation that gets (or fails to) some data, handles it and just goes away. We cannot do anything with the `Promise` after it is resolved/rejected - we have to make another HTTP call, create a new `Promise` and handle it again in the same way. 
+The thing is, `Promises` are only one particular case of async operation - a singular operation with a final and conclusive result. What does that mean? Let's take a look at a standard HTTP request - how is it invoked and resolved? Well, we call a URL using one of the HTTP methods, and get a `Promise` that will invoke the callback to the &quot;then&quot; method when data arrives (this is called &quot;resolving a `Promise`&quot;), or, if there has been any kind of error during the request, call the callback provided to the &quot;catch&quot; method (this is called &quot;rejecting a `Promise`&quot;). Okay, so this is an operation that gets (or fails to) some data, handles it and just goes away. We cannot do anything with the `Promise` after it is resolved/rejected - we have to make another HTTP call, create a new `Promise` and handle it again in the same way.
 
 Now, let's take a look at some click events on a button. We start listening to the click events, but there is no guarantee that the callback will be invoked any time soon, right? Now, 5 minutes later the user finally clicks the button, and our callback works and handles the event, but it is not &quot;resolved&quot;. The user can continue clicking on the button as many times as they want, and we would still have to handle that click. And after the user finally goes to another page, we have to stop listening to the clicks, because there is no button any more. We cannot represent a stream of events like clicks with a Promise, because a Promise works once and is destroyed afterwards. But `Observable` Streams of RxJS give us the ability to create streams, listen to their events, handle error cases, and also, handle the situation when the stream completes - like when the user went to another page in our example. So, in this regard, we can treat `Observables` as a far more powerful version of Promises, which deals with multiple events rather than one instance.
 
@@ -199,7 +204,7 @@ Take a look at the example below: ![](RackMultipart20210318-4-1e6dc56_html_533e7
 
 When I call the `saveChanges` method — the first example with `Promise`-wrapped request will work as expected. But in seconds `Observable`-wrapped example nothing will happen because `Observables` are lazily-evaluated while `Promises` are eagerly-evaluated.
 
-This means that Promises doesn't care whether they have any consumers that wait for their result or not, they will emit the value regardless. But `Observables` (to be precise — *cold* `Observables`) will emit only if we subscribe to them. In the case above you should subscribe to the `Observable` returned by **saveChanges** function.
+This means that Promises doesn't care whether they have any consumers that wait for their result or not, they will emit the value regardless. But `Observables` (to be precise — _cold_ `Observables`) will emit only if we subscribe to them. In the case above you should subscribe to the `Observable` returned by **saveChanges** function.
 
 ```ts
 saveChanges(data).subscribe();
@@ -265,7 +270,7 @@ For example:
 - Reactive Forms: **FormControls** has a . **valueChanges** Observable property. Now each time the whole form or some specific field has changed - you will be notified.
 - @ **ViewChildren** decorator property has a . **changes** Observable API. Now each time the list is re-rendered by Angular - you will know that.
 - **Interceptors** () - allow to implement additional logic for HTTP requests (like refresh tokens)
-- **Guards**: can return an `Observable` of a boolean value to check asynchronously if a user can visit a Route 
+- **Guards**: can return an `Observable` of a boolean value to check asynchronously if a user can visit a Route
 - **Route Resolvers**: do not render a page until the data necessary for it is in place
 
 And many more.

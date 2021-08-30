@@ -1,3 +1,8 @@
+---
+id: part-2
+title: Part 2. Reactive programming and RxJS
+---
+
 # Reactive programming and RxJS
 
 Contributors:
@@ -12,7 +17,8 @@ Chapter 2: Reactive Programming with RxJS
 
 By: Nate Lapinski
 
-In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as: 
+In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as:
+
 - What is declarative programming ?
 - What is the Observer pattern, and how does it relate to the Iterator pattern ?
 
@@ -87,25 +93,26 @@ For now, it's sufficient to think of "reactive" programming as being able to wor
 The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener) :
 
 ```js
-document.getElementById('test').addEventListener('click', event => {
-    console.log(event.target);
+document.getElementById("test").addEventListener("click", (event) => {
+  console.log(event.target);
 });
 ```
+
 This event listener is producing a stream of values, values emitted over time at each user click, and this stream virtually never completes.
 
 When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become had to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).
 
 ```js
-document.getElementById('test').addEventListener('click', event => {
-    console.log(event.target);
-    setTimeout(() => {
-            $.ajax({params})
-            .then(res => {
-                // deal with result
-            });
-    }, 400);
+document.getElementById("test").addEventListener("click", (event) => {
+  console.log(event.target);
+  setTimeout(() => {
+    $.ajax({ params }).then((res) => {
+      // deal with result
+    });
+  }, 400);
 });
 ```
+
 In this pseudo code, we can see callback being nested, and we see that this will cause issues very soon, like _what happens if user clicks multiple times ?_ or _how do we cancel the operation ?_
 
 In order to deal with these streams of data, RxJs will introduce much more elegant and powerful tools such as Observables that will be discussed in the next section.
