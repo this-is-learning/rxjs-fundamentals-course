@@ -42,11 +42,11 @@ jobs:
           path: ./website/build
           if-no-files-found: warn
 
-  deploy-docs:
+  deploy:
     name: Deploy website to GitHub Pages
-    if: >
-      github.ref == 'refs/heads/main' && (github.event_name ==
-      'workflow_dispatch' || github.event_name == 'push')
+    # if: >
+    #   github.ref == 'refs/heads/main' && (github.event_name ==
+    #   'workflow_dispatch' || github.event_name == 'push')
     needs: build
     runs-on: ubuntu-latest
 
