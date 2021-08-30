@@ -10,10 +10,6 @@ Contributors:
 - Oleksandr Poshtaruk
 - Armen Vardanyan
 
-Links for ideas (not part of the article - possibly for 'read more' section)
-
-[https://itnext.io/promises-vs-observables-for-angularjs-to-angular-migration-1161afacef7e](https://itnext.io/promises-vs-observables-for-angularjs-to-angular-migration-1161afacef7e)
-
 # Why do we need Observables?
 
 Async operations are the core of today's web development. Almost any interesting interaction in a modern web app involves an async operation. Mouse click? Async. Loading data from the backend? Async. Waiting for something to happen before rendering some piece of UI? Also async. But there are not many powerful built-in tools for implementing working with them. Let's recall some of the native ones:

@@ -11,8 +11,6 @@ Contributors:
 
 # Everything is a stream
 
-By Lars Gyrup Brink Nielsen
-
 JavaScript started in the browser in 1995. Everything was executed in the same, single thread. Why would it be any different in a time when most computers were only able to run a single thread at a time? Today, the more modern worker APIs run in separate threads to prevent the main thread from blocking and use the power of multithreading that all devices support by now.
 
 JavaScript evolved as an event-based environment. In the beginning, most events were initiated directly by a user interacting with a web page. Today, very complex and complicated applications are executed in the browser. The event-based model is critical to our way of thinking when developing JavaScript applications.

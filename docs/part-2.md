@@ -9,14 +9,6 @@ Contributors:
 
 - Nate Lapinski
 
-##
-
-# Fundamentals of RxJS
-
-Chapter 2: Reactive Programming with RxJS
-
-By: Nate Lapinski
-
 In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as:
 
 - What is declarative programming ?
@@ -248,5 +240,3 @@ obs.subscribe(console.log); // prints 1,2,3,4
 ## Operators - composition with Observables
 
 Way back in the section on declarative and imperative programming, we talked about Array.prototype's map function. We saw that it lets us apply a function to each element in an array. More generally, a map applies a transformation function (in our example, add1) over some container (in our example, the array x). RxJS has its own map. It's an example of an _operator_. In the case of RxJS, the container is not an array but an observable. Other than that, many of the concepts are similar! ( **Edit: In a more advanced guide, it might be fun to talk about the difference between array's map, which will map over every element before moving to the next operation, and Observables, which iirc are transducers and instead process a single element through each operator in the pipeline before moving on** )
-
-TODO: Add more details using map and filter as examples, and maybe show some sample implementations. Talk about how operators subscribe to one another internally, when composed together.

@@ -10,15 +10,11 @@ Contributors:
 - Andrew Grekov
 - Armen Vardanyan
 
-#
-
 # **RxJS operators that we use on a daily basis**
 
 # Comment
 
 When we first begin to work with **RxJS**, we need to learn about several operators that we will be using all the time. In this part of the course we will learn about the most common operators and also use them in practice.
-
-#
 
 # **Changing values in a stream**
 
@@ -445,8 +441,6 @@ source.subscribe(value => console.log(value);
 ```
 
 Now we can be sure the code will work correctly, and all the errors will be handled.
-
-#
 
 # **In Conclusion**
 
