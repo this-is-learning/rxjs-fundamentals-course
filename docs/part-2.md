@@ -1,3 +1,8 @@
+---
+id: part-2
+title: Part 2. Reactive programming and RxJS
+---
+
 # Reactive programming and RxJS
 
 Contributors:
@@ -144,7 +149,6 @@ setInterval(() => {
   subject.publish(`test data ${++counter}`);
 }, 1000);
 ```
-
 > The classic observer pattern has been a staple of web development for many years. However, it provides no way of containerizing events, meaning we can't compose streams out of subject events. Ideally, we'd have some data structure that enables us to do this.
 
 > RxJS improves upon this classical observer pattern by introducing a more robust interface for observers, one that supports not just a method for publishing data (onNext), but also methods for notifying observers of errors (onError), as well as when there is no more data to consume (onComplete). In doing this, the RxJS makes the observer pattern symmetric to the iterator pattern, in some sense.

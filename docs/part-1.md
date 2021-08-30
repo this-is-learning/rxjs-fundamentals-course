@@ -1,3 +1,8 @@
+---
+id: part-1
+title: Part 1. RxJS: better async programming
+---
+
 # RxJS: better async programming
 
 Contributors:
