@@ -8,8 +8,12 @@ title: Part 2. Reactive programming and RxJS
 Contributors:
 
 - Nate Lapinski
+- Alain Boudard
+- Maina Wycliffe
 
-In this chapter, we will explore the building blocks of reactive programming and RxJS. We'll answer questions such as:
+# Fundamentals of RxJS
+
+## Chapter 2: Reactive Programming with RxJS
 
 - What is declarative programming ?
 - What is the Observer pattern, and how does it relate to the Iterator pattern ?
@@ -78,14 +82,14 @@ Another thing to note about Solution 2 is that it is _composable_, meaning we co
 
 ## Reactive Programming
 
-**(Edit: This section could probably use more detail)**
+Reactive Programming is being able to work with an asynchronous stream of data. You can think of this as a pipe, where data is flowing from one end to the other. You can then observe this stream of data and do something with it - react - like apply some business logic as the data flows through the pipe. These data streams can be anything, from HTTP Requests, Mouse and Keyboard events, Data from Sensors, Push Notifications, or anything that can happen. For instance, take a chat application, where two people are having a chat. Whenever a new message arrives, could be in the form of text or a reaction to the previous message, you need to react accordingly and update the UI appropriately.
 
-For now, it's sufficient to think of "reactive" programming as being able to work with asynchronous streams of data (like a sequence of mouse clicks or keystrokes) and respond to events, such as keystrokes or mouse clicks. Ideally, we'd like to be able to compose these streams of data together using _operators_ (map, filter, expand, etc), and have robust error handling.
+ReactiveX (Rx), which RxJS is an implementation of, gives you a set of tools to help you compose data streams. These tools are known as _operators_ and can be used to create new data streams, combine, transform, filter, join, handle errors, etc in your data streams.
 
-The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener) :
+The main goal of such an approach will be to handle nicely common issues we can have when dealing with asynchronous streams of data, like the callback hell. This expression refers to the callback function used in asynchronous functions like this (the second argument of addEventListener):
 
 ```js
-document.getElementById("test").addEventListener("click", (event) => {
+document.getElementById('test').addEventListener('click', (event) => {
   console.log(event.target);
 });
 ```
@@ -95,7 +99,7 @@ This event listener is producing a stream of values, values emitted over time at
 When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become had to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).
 
 ```js
-document.getElementById("test").addEventListener("click", (event) => {
+document.getElementById('test').addEventListener('click', (event) => {
   console.log(event.target);
   setTimeout(() => {
     $.ajax({ params }).then((res) => {
@@ -112,6 +116,18 @@ In order to deal with these streams of data, RxJs will introduce much more elega
 ## The Iterator and Observer patterns
 
 Iterables - data types that implement the "iterator" interface - are pretty common in Javascript. Perhaps the most common example is the array. Iterables are usually consumed using a `next` method. Consumers of an iteratable tend to pull data from the producer by using the `next` method. The consumer is the one in control of the flow of data.
+
+```js
+var arr = ['a', 'b', 'c'];
+var iterator = arr.keys();
+
+console.log(iterator.next()); // { value: 0, done: false }
+console.log(iterator.next()); // { value: 1, done: false }
+console.log(iterator.next()); // { value: 2, done: false }
+console.log(iterator.next()); // { value: undefined, done: true }
+```
+
+Note that the last value has done property set to true, meaning we _pulled_ all data from the iterator.
 
 By contrast, in the observer pattern, the publisher of the data _pushes_ data to its subscribers, so it is in control of the flow of data.
 
@@ -144,9 +160,10 @@ setInterval(() => {
 }, 1000);
 ```
 
-> The classic observer pattern has been a staple of web development for many years. However, it provides no way of containerizing events, meaning we can't compose streams out of subject events. Ideally, we'd have some data structure that enables us to do this.
+The classic observer pattern has been a staple of web development for many years. However, it provides no way of containerizing events, meaning we can't compose streams out of subject events. Ideally, we'd have some data structure that enables us to do this.
 
-> RxJS improves upon this classical observer pattern by introducing a more robust interface for observers, one that supports not just a method for publishing data (onNext), but also methods for notifying observers of errors (onError), as well as when there is no more data to consume (onComplete). In doing this, the RxJS makes the observer pattern symmetric to the iterator pattern, in some sense.
+RxJS improves upon this classical observer pattern by introducing a more robust interface for observers, one that supports not just a method for publishing data (onNext), but also methods for notifying observers of errors (onError), as well as when there is no more data to consume (onComplete). Note that by contract, error and complete are exclusive, you either have one OR the other.
+In doing this, the RxJS makes the observer pattern symmetric to the iterator pattern, in some sense.
 
 Soon, we'll see how to implement a simple Observable class.
 
@@ -166,9 +183,9 @@ arr.map((x) => x + 1); // [2,3,4,5,6]
 
 In this case, `arr` is finite. It's declared, and all of its values are in memory at once. We can synchronously iterate over it using Array.prototype.map, to produce a new array (`[2,3,4,5,6]`).
 
-Because this array is finite, we "know" when it ends - it has length of five in this case. We already know that arrays are compostable containers, so we can do things like map, filter, flatMap, reduce, etc, over them. How convenient.
+Because this array is finite, we "know" when it ends - it has length of five in this case. We already know that arrays are composable containers, so we can do things like map, filter, flatMap, reduce, etc, over them. How convenient.
 
-But what about an "infinite array"? Maybe you have an array that you'd like to use to model mouse click events, or mousemove events. How would you ever know when you are finished? A user could click or move the mouse at any time, so this theoretical array would be infinite in some sense - we could never know when it would end.
+But what about an "infinite array" ? Maybe you have an array that you'd like to use to model mouse click events, or mousemover events. How would you ever know when you are finished ? A user could click or move the mouse at any time, so this theoretical array would be infinite in some sense - we could never know when it would end.
 
 And that's not really a problem, we could just listen for events and "push" these new events into some shared array state…
 
@@ -200,7 +217,7 @@ class Observable {
 
   static of(...args) {
     return new Observable((obs) => {
-      args.forEach(val => obs.onNext(val));
+      args.forEach((val) => obs.onNext(val));
       obs.onCompleted();
 
       return {
@@ -209,9 +226,9 @@ class Observable {
           obs = {
             onNext: () => {},
             onError: () => {},
-            onCompleted: () => {}
+            onCompleted: () => {},
           };
-        }
+        },
       };
     });
   }
@@ -219,21 +236,23 @@ class Observable {
   // public api for registering an observer
   subscribe(onNext, onError, onCompleted) {
     if (typeof onNext === 'function') {
-      return this.\_subscribe({
+      return this._subscribe({
         onNext: onNext,
         onError: onError || (() => {}),
-        onCompleted: onCompleted || (() => {})
+        onCompleted: onCompleted || (() => {}),
       });
     } else {
-      return this.\_subscribe(onNext);
+      return this._subscribe(onNext);
     }
   }
 }
 
-const obs = Observable.of(1,2,3,4);
+const obs = Observable.of(1, 2, 3, 4);
 
 obs.subscribe(console.log); // prints 1,2,3,4
 ```
+
+In this example, we take a pseudo list of values and turn it into a stream of values, this is the of() method. Basically, nothing happens with an Observable until we subscribe to it, the _obs_ object is some blueprint of a stream of values.
 
 **(Note: if keeping this example implementation makes sense, then explain it in more detail)**
 
