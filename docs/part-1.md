@@ -135,9 +135,9 @@ The thing is, `Promises` are only one particular case of async operation - a sin
 
 Now, let's take a look at some click events on a button. We start listening to the click events, but there is no guarantee that the callback will be invoked any time soon, right? Now, 5 minutes later the user finally clicks the button, and our callback works and handles the event, but it is not &quot;resolved&quot;. The user can continue clicking on the button as many times as they want, and we would still have to handle that click. And after the user finally goes to another page, we have to stop listening to the clicks, because there is no button any more. We cannot represent a stream of events like clicks with a Promise, because a Promise works once and is destroyed afterwards. But `Observable` Streams of RxJS give us the ability to create streams, listen to their events, handle error cases, and also, handle the situation when the stream completes - like when the user went to another page in our example. So, in this regard, we can treat `Observables` as a far more powerful version of Promises, which deals with multiple events rather than one instance.
 
-![](RackMultipart20210318-4-1e6dc56_html_19b10da71535a078.png)
+![Promise vs. RxJS](/rxjs-fundamentals-course/img/part-1/promise-vs-rxjs.png)
 
-(Picture by @thekiba_io)
+_Image by Andrew Grekov._
 
 Now lets take a closer look.
 
