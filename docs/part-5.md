@@ -1,9 +1,9 @@
 ---
 id: part-5
-title: Part 5. Everything is a stream: Pushed-based architecture
+title: Part 5. Everything is a stream: Push-based architecture
 ---
 
-# Everything is a stream: Pushed-based architecture
+# Everything is a stream: Push-based architecture
 
 Contributors:
 
