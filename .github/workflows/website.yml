@@ -17,9 +17,6 @@ jobs:
     name: Build website
     runs-on: ubuntu-latest
 
-    env:
-      working-directory: ./website
-
     steps:
       - uses: actions/checkout@v2
       - name: Use Node.js ${{ env.node-version }}
@@ -28,24 +25,21 @@ jobs:
           node-version: ${{ env.node-version }}
 
       - run: npm config set cache $NPM_CACHE_PATH
-        working-directory: ${{ env.working-directory }}
       - name: Cache NPM cache directory
         uses: actions/cache@v2
         with:
           path: ${{ env.NPM_CACHE_PATH }}
-          key: ${{ runner.os }}-npm-${{ hashFiles('./website/package-lock.json') }}
+          key: ${{ runner.os }}-npm-${{ hashFiles('./package-lock.json') }}
           restore-keys: |
             ${{ runner.os }}-npm-
       - run: npm ci
-        working-directory: ${{ env.working-directory }}
       - name: Build website
         run: npm run build
-        working-directory: ${{ env.working-directory }}
       - name: "Upload website build artifact"
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.website-package-name }}
-          path: ${{ env.working-directory }}/build/rxjs-fundamentals-course
+          path: ./build/rxjs-fundamentals-course
           if-no-files-found: warn
 
   deploy:
