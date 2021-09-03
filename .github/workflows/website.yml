@@ -42,7 +42,7 @@ jobs:
         with:
           name: ${{ env.website-package-name }}
           path: ./build/rxjs-fundamentals-course
-          if-no-files-found: warn
+          if-no-files-found: error
 
   deploy:
     name: Deploy website to GitHub Pages
