@@ -1,6 +1,6 @@
 ---
 id: part-1
-title: Part 1. RxJS: better async programming
+title: "Part 1. RxJS: Better async programming"
 ---
 
 # RxJS: better async programming
@@ -135,7 +135,7 @@ The thing is, `Promises` are only one particular case of async operation - a sin
 
 Now, let's take a look at some click events on a button. We start listening to the click events, but there is no guarantee that the callback will be invoked any time soon, right? Now, 5 minutes later the user finally clicks the button, and our callback works and handles the event, but it is not &quot;resolved&quot;. The user can continue clicking on the button as many times as they want, and we would still have to handle that click. And after the user finally goes to another page, we have to stop listening to the clicks, because there is no button any more. We cannot represent a stream of events like clicks with a Promise, because a Promise works once and is destroyed afterwards. But `Observable` Streams of RxJS give us the ability to create streams, listen to their events, handle error cases, and also, handle the situation when the stream completes - like when the user went to another page in our example. So, in this regard, we can treat `Observables` as a far more powerful version of Promises, which deals with multiple events rather than one instance.
 
-![Promise vs. RxJS](/rxjs-fundamentals-course/img/part-1/promise-vs-rxjs.png)
+![Promise vs. RxJS](/img/part-1/promise-vs-rxjs.png)
 
 _Image by Andrew Grekov._
 
@@ -190,13 +190,33 @@ We will review some of these combinations and their use-cases in a later chapter
 
 At first glance — Observables are just advanced Promises: Promises emits one value and complete (resolve), Observables emit 0, one or many values and complete as well (emit and complete are different actions). For HTTP service in AngularJS (where it used Promises) and Angular (where it uses Observables) provides only one value — so seems both frameworks work very similar in this case.
 
-![](RackMultipart20210318-4-1e6dc56_html_fc59ddf18c80e00b.png)
+```ts
+// Observables in Angular 2+
+const source$ = this.http.get('https://example.com');
+source$.subscribe({
+  next: data => handleData(data), // Success handler
+  error: error => handleError(error), // Error handler
+  complete: () => completeHandler(), // Complete handler
+});
+```
 
 but if you application is doing something more then 'Hello world' — please pay attention to the differences.
 
 ### #1 Eager vs Lazy
 
-Take a look at the example below: ![](RackMultipart20210318-4-1e6dc56_html_533e70b36f8382d3.png)
+Take a look at the example below:
+
+```ts
+// Promise-wrapped HTTP request
+saveChanges(data) {
+  return $http.post('https://example.com', data);
+}
+
+// Observable-wrapped HTTP request
+saveChanges(data) {
+  return this.http.post('https://example.com', data); // Does not send request!
+}
+```
 
 When I call the `saveChanges` method — the first example with `Promise`-wrapped request will work as expected. But in seconds `Observable`-wrapped example nothing will happen because `Observables` are lazily-evaluated while `Promises` are eagerly-evaluated.
 
@@ -212,13 +232,42 @@ To keep an eye on it — use _rxjs-no-ignored-observable_ rule from [rxjs-tslint
 
 Again, start with an example when we do search on a backend on input text change
 
-![](RackMultipart20210318-4-1e6dc56_html_518aba158767f496.png)
+```html
+<input ngKeyup="onKeyUp($event)>
+```
+
+```ts
+// Promise-wrapped HTTP request
+saveChanges(event) {
+  const text = event.target.value;
+  $http.get('https://example.com?search=' + text)
+    .then(searchResult => showSearchResult(searchResult));
+}
+```
 
 There is a drawback here — you cannot reject results of the previous request if the user continues typing (`debounce` make this problem a bit less but doesn't eliminate it). And yet another issue — race conditions are possible (when a later request result will come back faster then an earlier one — so we get an incorrect response displayed).
 
 `Observables` can avoid this concern quite elegantly with [_ **switchMap** _](https://rxjs-dev.firebaseapp.com/api/operators/switchMap) operator
 
-![](RackMultipart20210318-4-1e6dc56_html_f31260205a770974.png)
+```html
+<input id="search">
+```
+
+```ts
+// Observable-wrapped HTTP requet
+const inputElement = document.getElementById('search');
+const search$ = fromEvent(inputElement, 'keyup');
+
+ngOnInit() {
+  search$.pipe( // each time a new text value is emitted
+    switchMap(event => { // switchMap cancels previous request and sends a new one
+      const text = event.target.value;
+
+      return this.http.get('https://example.com?search=' + text);
+    })
+  ).subscribe(newData => this.applyNewData(newData)); // Use new data
+}
+```
 
 We will talk about `switchMap` and other higher-order-observable operators in the advanced RxJS course.
 
