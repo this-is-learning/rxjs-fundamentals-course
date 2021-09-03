@@ -41,7 +41,7 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: ${{ env.website-package-name }}
-          path: ./build/rxjs-fundamentals-course
+          path: ./build/
           if-no-files-found: error
 
   deploy:
