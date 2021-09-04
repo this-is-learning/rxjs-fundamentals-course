@@ -96,7 +96,7 @@ document.getElementById('test').addEventListener('click', (event) => {
 
 This event listener is producing a stream of values, values emitted over time at each user click, and this stream virtually never completes.
 
-When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become had to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).
+When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become hard to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).
 
 ```js
 document.getElementById('test').addEventListener('click', (event) => {
