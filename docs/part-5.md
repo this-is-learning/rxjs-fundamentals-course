@@ -1,6 +1,6 @@
 ---
 id: part-5
-title: Part 5. Everything is a stream: Push-based architecture
+title: "Part 5. Everything is a stream: Push-based architecture"
 ---
 
 # Everything is a stream: Push-based architecture
