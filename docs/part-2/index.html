@@ -122,7 +122,7 @@
 });
 </code></pre>
 <p>This event listener is producing a stream of values, values emitted over time at each user click, and this stream virtually never completes.</p>
-<p>When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become had to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).</p>
+<p>When we will want to deal with other operations, we will have to nest the next calls in each callback function. Not only will it become hard to read, but the error handling will be very complicated if not impossible. In addition, we will have to work with streams of data that never complete (like the click event) and some that do complete (like a timeout or an Ajax call).</p>
 <pre><code class="hljs css language-js"><span class="hljs-built_in">document</span>.getElementById(<span class="hljs-string">'test'</span>).addEventListener(<span class="hljs-string">'click'</span>, (event) =&gt; {
   <span class="hljs-built_in">console</span>.log(event.target);
   setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> {
