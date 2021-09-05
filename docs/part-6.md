@@ -5,6 +5,12 @@ title: Part 6. Creational operators
 
 # Creational operators
 
+Contributors:
+
+- Chau Tran
+- Armen Vardanyan
+- Tiep Phan
+
 The following example demonstrates how to manually create an `Observable`:
 
 ```ts
@@ -261,7 +267,7 @@ fromEventPattern(
 
 From these examples, we can tell that `fromEventPattern()` accepts 3 arguments: `addHandler`, `removeHandler`, and an optional `projectFunction`. Moreover, the behavior isn't that much different from `fromEvent()`.
 
-`fromEventPattern()` gives you the ability to convert the Events using their _original_ APIs, like we're using the DOM API like `addEventListener` and `removeEventListener` to convert the `MouseEvent` to `Observable`. With this knowledge, you can apply `fromEventPattern()` with more complex Event APIs like `SignalR Hub`.
+`fromEventPattern()` gives you the ability to convert the Events using their _original_ APIs, like we're using the DOM API such as `addEventListener` and `removeEventListener` to convert the `MouseEvent` to `Observable`. With this knowledge, you can apply `fromEventPattern()` with more complex Event APIs like `SignalR Hub`.
 
 ```ts
 // _getHub() is an arbitrary function that returns a Hub
@@ -305,7 +311,7 @@ export class SocketService {
 
   on<EventName extends keyof SocketEventMap>(
     event: EventName
-  ): Observabe<SocketEventMap<EventName>> {
+  ): Observabe<SocketEventMap[EventName]> {
     return fromEventPattern(
       (handler) => {
         this.socket?.on(event, handler);
