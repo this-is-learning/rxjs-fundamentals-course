@@ -239,3 +239,29 @@ const increment = (value) => (times) => repeat(times, (_) => _ + 1, value);
 
 console.log(increment(2)(1)); // output: 3
 ```
+
+### Point-Free Notation
+
+Because FP is about readibility too, how we write code is very important. 
+
+Let's explain the concept with an example. Given this function:
+
+```ts
+const isBiggerThan10 = (x: number) => x > 10;
+```
+
+Can be used like this:
+
+```ts
+[1,2,3,20,34,12,6].filter(num => isBiggerThan10(num));
+```
+
+Obviously this is working but could be easier to read. 
+
+We can see that the parameter `num` is written down twice. But becahse the inner function is expecting same declared parameter in the left part of the provided function, we can apply point-free notation:
+
+```ts
+[1,2,3,20,34,12,6].filter(isBiggerThan10);
+```
+
+We have reduced verbosity, and it implies simplicity.
