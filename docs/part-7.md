@@ -7,27 +7,27 @@ title: Part 7. Functional Programming Introduction
 
 Contributors:
 
-- Sergi Dote
+- Sergi Dote Teixidor
 
 ## Introduction
 
-Functional programming is a paradigm that puts the attention on functions. But this definition can be a little confusing since developers are coding using functions and methods and this doesn't mean they are programming following the FP paradigm.
+Functional programming is a paradigm that puts attention on functions. But this definition can be a little confusing since developers are coding using functions and methods and this doesn't mean they are programming following the Functional Programming paradigm.
 
-FP talks about abstract control flows, data mapping, operations, immutability, and other concepts we are reviewing in the next steps.
+Functional Programming talks about abstract control flows, data mapping, operations, immutability, and other concepts we are reviewing in the next steps.
 
-Change our mind to a FP perspective takes a while.
+Change our mind to a Functional Programming perspective takes a while.
 
-## What really FP is?
+## What is Functional Programming really?
 
 Functional programming comes from mathematical logic, and λ-calculus. The λ-calculus helps us to describe programs as data transformations using function applications.
 
-FP teachs us to decompose a problem into simple functions and chain them to get a final result. Thinking like this, we can break the complexity of a program, and achieve any problem as a set of easy steps.
+Functional Programming teachs us to decompose a problem into simple functions and chain them to get a result. Thinking like this, we can break the complexity of a program and achieve any problem as a sequence of easy steps.
 
 In my opinion, a perfect description is what Michael Feathers said:
 
-*“OO makes code understandable by encapsulating moving parts. FP makes code understandable by minimizing moving parts”.*
+*“OO makes code understandable by encapsulating moving parts. Functional Programming makes code understandable by minimizing moving parts”.*
 
-### FP is declarative
+### Functional Programming is declarative
 
 There are two programming paradigms:
 
@@ -41,7 +41,7 @@ Under this paradigm we define which operations are involved but we don't specify
 
 Functional programming is declarative, it defines operations and data flows without any strict control flow definition.
 
-## FP concepts
+## Functional Programming concepts
 
 We will list the main features below:
 
@@ -53,11 +53,11 @@ Immutability is a core concept of Functional Programming, without it, you cannot
 
 ### Pure functions and side effects
 
-With FP our code becomes immutable, using pure functions. Pure functions don’t manipulate outer variables or input parameters: **Same inputs produce same outputs.**
+With Functional Programming our code becomes immutable, using pure functions. Pure functions don’t manipulate outer variables or input parameters: **Same inputs produce same outputs.**
 
 Pure functions don’t have side effects, getting a simpler code.
 
-This is a pure function (val parameter is never mutated):
+This is a pure function (we never mutate the `val` parameter):
 
 ```ts
 const increment = (val: number) => val + 1;
@@ -82,11 +82,11 @@ That means we can replace this kind of functions by their expression without cha
 
 ### Partial application and Currying
 
-Partial application means fixing a number of arguments to a function, producing another function of smaller arity.
+Partial application means fixing any number of arguments to a function, producing another function of smaller arity.
 
 The currying concept (created Haskell Curry) is the technique of converting a function that takes multiple arguments into a sequence of functions that each takes a single argument.
 
-For instance, this function: 
+For instance, this function:
 
 ```ts
 function add(a: number, b: number): number {
@@ -94,7 +94,7 @@ function add(a: number, b: number): number {
 }
 ```
 
-Can be curryfied like this:
+We can curry the function like this:
 
 ```ts
 const add = (a: number) => (b: number) => a + b;
@@ -120,7 +120,7 @@ Defining `add10` function we have a new function that will be executed when all 
 
 Pure functions can be composed to get our expected result. Using the function composition technique, any problem can be decomposed into simpler functions with only one responsibility, and be solved chaining these pieces.
 
-With the folloeing example let's see, given a problem, we solve it with imperative code, and after that with FP and declarativelly, using function composition.
+In the following, we solve a given a problem first with imperative code, then declarativelly with Functional Programming using function composition.
 
 Having this interface:
 
@@ -138,7 +138,8 @@ interface Student {
   university: string;
 }
 ```
-We want to find all women studing in 'Union College'.
+
+We want to find all women studying in 'Union College'.
 
 Under an imperative perspective, can be solve like this:
 
@@ -158,7 +159,7 @@ function getWomenFromUnionCollege(students: Array<Student>) {
 
 This function has a single responsibility, but is not reusable, and we are controlling what are the program doing to achieve the final result.
 
-One solution following a FP approach, could be this:
+One solution following a Functional Programming approach, could be this:
 
 ```ts
 const select =
@@ -184,13 +185,13 @@ In this case we are telling what we need, but not how to do this:
 
 Talking about function composition, there is a related concept: function chaining. It is another way to combine function in order to get a final result. An example is RxJS pipe function that allows as to chain operators, creating a data flow that will give us the final value.
 
-Let's create our pipe function for chaining our pure functions: 
+Let's create our pipe function for chaining our pure functions:
 
 ```ts
 const pipe = (fns) => (x) => fns.reduce((v, f) => f(v), x);
 ```
 
-Using this previous definition, we can chain functions: 
+Using this previous definition, we can chain functions:
 
 ```ts
 const oddNumbers = (numbers: Array<number>) => numbers.filter(_ => _ % 2 !== 0);
@@ -217,7 +218,7 @@ filter(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: an
 
 A function that will apply a function given as a parameter.
 
-This is so powerful. Let's see one example: 
+This is so powerful. Let's see an example:
 
 ```ts
 const repeat = (times, funct, initial) =>
@@ -242,7 +243,7 @@ console.log(increment(2)(1)); // output: 3
 
 ### Point-Free Notation
 
-Because FP is about readibility too, how we write code is very important. 
+Because Functional Programming is about readibility too, how we write code is very important.
 
 Let's explain the concept with an example. Given this function:
 
@@ -256,7 +257,7 @@ Can be used like this:
 [1,2,3,20,34,12,6].filter(num => isBiggerThan10(num));
 ```
 
-Obviously this is working but could be easier to read. 
+Obviously this is working but could be easier to read.
 
 We can see that the parameter `num` is written down twice. But becahse the inner function is expecting same declared parameter in the left part of the provided function, we can apply point-free notation:
 
