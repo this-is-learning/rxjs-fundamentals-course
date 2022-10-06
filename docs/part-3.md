@@ -390,7 +390,7 @@ const source = from([1, 2, 3]).pipe(
   // Something went wrong!
 
   map(() => {
-    throw newError("Unexpected 🙀!");
+    throw new Error("Unexpected 🙀!");
   })
 );
 
