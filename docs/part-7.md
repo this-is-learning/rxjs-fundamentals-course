@@ -21,7 +21,7 @@ Change our mind to a Functional Programming perspective takes a while.
 
 Functional programming comes from mathematical logic, and λ-calculus. The λ-calculus helps us to describe programs as data transformations using function applications.
 
-Functional Programming teachs us to decompose a problem into simple functions and chain them to get a result. Thinking like this, we can break the complexity of a program and achieve any problem as a sequence of easy steps.
+Functional Programming teaches us to decompose a problem into simple functions and chain them to get a result. Thinking like this, we can break the complexity of a program and achieve any problem as a sequence of easy steps.
 
 In my opinion, a perfect description is what Michael Feathers said:
 
