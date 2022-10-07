@@ -45,7 +45,7 @@ Another great feature the _HttpClientModule_ provides is the ability to intercep
 For example, this is how an interceptor can be provided:
 
 ```ts
-{ provide: HTTP\_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
+{ provide: HTTP_INTERCEPTORS, useClass: TokenInterceptor, multi: true }
 ```
 
 And this is how it might be implemented:
