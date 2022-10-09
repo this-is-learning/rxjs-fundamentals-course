@@ -34,7 +34,7 @@ This is a common `Observer` that we'll be using throughout this part. If there i
 ```ts
 const observer = {
   next: (val) => console.log('next:', val),
-  error: (err) => console.log('error: err),
+  error: (err) => console.log('error:', err),
   complete: () => console.log('complete'),
 };
 ```
