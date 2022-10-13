@@ -47,7 +47,7 @@ In this section, we list the key features of FP.
 
 ### Immutability
 
-Immutable data cannot be modified after its creation. When mutating data we are producing side effects, and we cannot ensure the program correctness.
+We cannot modify immutable data after its creation. When mutating data, we are producing side effects and we cannot ensure the program's correctness.
 
 Immutability is a core concept of Functional Programming, without it, you cannot ensure the data flow is working properly, getting a buggy program.
 
