@@ -179,7 +179,7 @@ const womenFromUnionCollege = getWomen(students).filter(fromUnionCollege);
 In this case we are telling what we need, but not how to do this:
 
 - We have a generic function (select), that can be used to create another functions.
-- Combining functions we get the desired result.
+- By combining the functions, we get the desired result.
 
 #### Function chaining
 
