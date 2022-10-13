@@ -157,7 +157,7 @@ function getWomenFromUnionCollege(students: Array<Student>) {
 }
 ```
 
-This function has a single responsibility, but is not reusable, and we are controlling what are the program doing to achieve the final result.
+This function has a single responsibility but is not reusable and we are instructing the program on what to do to reach the result.
 
 One solution following a Functional Programming approach, could be this:
 
