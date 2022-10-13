@@ -210,7 +210,7 @@ Because all involved functions are pure, we can ensure the result has never any 
 
 In Functional Programming, a function is a first-class citizen of the language, that means that a function is just another value.
 
-A good example is the Javascript's `filter` function:  
+A good example is the JavaScript `filter` function:
 
 ```ts
 filter(predicate: (value: T, index: number, array: T[]) => unknown, thisArg?: any): T[];
