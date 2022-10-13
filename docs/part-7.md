@@ -114,7 +114,7 @@ const add10 = add(10);
 const result = add10(5);
 ```
 
-Defining `add10` function we have a new function that will be executed when all parameters are provided (a second parameter is required).
+By defining the `add10` function, we have a new function that we execute when we have provided all parameters (the function requires a second parameter).
 
 ### Function composition
 
