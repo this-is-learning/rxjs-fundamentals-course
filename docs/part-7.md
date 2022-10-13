@@ -43,7 +43,7 @@ Functional programming is declarative, it defines operations and data flows with
 
 ## Functional Programming concepts
 
-We will list the main features below:
+In this section, we list the key features of FP.
 
 ### Immutability
 
