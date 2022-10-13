@@ -251,7 +251,7 @@ Let's explain the concept with an example. Given this function:
 const isBiggerThan10 = (x: number) => x > 10;
 ```
 
-Can be used like this:
+Which we can use like this:
 
 ```ts
 [1,2,3,20,34,12,6].filter(num => isBiggerThan10(num));
