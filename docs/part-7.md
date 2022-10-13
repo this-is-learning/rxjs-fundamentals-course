@@ -265,4 +265,4 @@ We can see that the parameter `num` is written down twice. But becahse the inner
 [1,2,3,20,34,12,6].filter(isBiggerThan10);
 ```
 
-We have reduced verbosity, and it implies simplicity.
+We have reduced verbosity which implies simplicity.
