@@ -23,7 +23,7 @@ Functional programming comes from mathematical logic, and λ-calculus. The λ-ca
 
 Functional Programming teaches us to decompose a problem into simple functions and chain them to get a result. Thinking like this, we can break the complexity of a program and achieve any problem as a sequence of easy steps.
 
-In my opinion, a perfect description is what Michael Feathers said:
+A perfect description is what Michael Feathers said:
 
 *“OO makes code understandable by encapsulating moving parts. Functional Programming makes code understandable by minimizing moving parts”.*
 
