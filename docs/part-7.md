@@ -259,7 +259,7 @@ Can be used like this:
 
 Obviously this is working but could be easier to read.
 
-We can see that the parameter `num` is written down twice. But becahse the inner function is expecting same declared parameter in the left part of the provided function, we can apply point-free notation:
+We specify the parameter `num` twice. Because the inner function is expecting the same declared parameter in the left part of the provided function, we can apply point-free notation:
 
 ```ts
 [1,2,3,20,34,12,6].filter(isBiggerThan10);
