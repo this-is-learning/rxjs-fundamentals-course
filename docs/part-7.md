@@ -208,7 +208,7 @@ Because all involved functions are pure, we can ensure the result has never any 
 
 ### High Order Functions
 
-In Functional Programming, a function is a first-class citizen of the language, that means that a function is just another value.
+In Functional Programming, a function is a first-class citizen of the language which means that a function is just another value.
 
 A good example is the JavaScript `filter` function:
 
