@@ -118,7 +118,7 @@ Defining `add10` function we have a new function that will be executed when all 
 
 ### Function composition
 
-Pure functions can be composed to get our expected result. Using the function composition technique, any problem can be decomposed into simpler functions with only one responsibility, and be solved chaining these pieces.
+Pure functions can be composed to get our expected result. Using the function composition technique, we can decompose any problem into simpler functions with only one responsibility and solve it by chaining these pieces.
 
 In the following, we solve a given a problem first with imperative code, then declarativelly with Functional Programming using function composition.
 
