@@ -183,7 +183,7 @@ In this case we are telling what we need, but not how to do this:
 
 #### Function chaining
 
-Talking about function composition, there is a related concept: function chaining. It is another way to combine function in order to get a final result. An example is RxJS pipe function that allows as to chain operators, creating a data flow that will give us the final value.
+Talking about function composition, a related concept is *function chaining*. It is another way to combine functions to get a result. An example is RxJS' `pipe` function which allows us to chain operators, creating a data flow that will give us the final value.
 
 Let's create our pipe function for chaining our pure functions:
 
