@@ -25,7 +25,7 @@ Functional Programming teaches us to decompose a problem into simple functions a
 
 A perfect description is what Michael Feathers said:
 
-*“OO makes code understandable by encapsulating moving parts. Functional Programming makes code understandable by minimizing moving parts”.*
+> OO makes code understandable by encapsulating moving parts. FP makes code understandable by minimizing moving parts.
 
 ### Functional Programming is declarative
 
@@ -185,7 +185,7 @@ In this case we are telling what we need, but not how to do this:
 
 Talking about function composition, a related concept is *function chaining*. It is another way to combine functions to get a result. An example is RxJS' `pipe` function which allows us to chain operators, creating a data flow that will give us the final value.
 
-Let's create our pipe function for chaining our pure functions:
+Let's create the `pipe` function for chaining pure functions:
 
 ```ts
 const pipe = (fns) => (x) => fns.reduce((v, f) => f(v), x);
@@ -243,7 +243,7 @@ console.log(increment(2)(1)); // output: 3
 
 ### Point-Free Notation
 
-Because Functional Programming is about readibility too, how we write code is very important.
+Because Functional Programming is about readability too, how we write code is particularly important.
 
 Let's explain the concept with an example. Given this function:
 
@@ -257,7 +257,7 @@ Which we can use like this:
 [1,2,3,20,34,12,6].filter(num => isBiggerThan10(num));
 ```
 
-Obviously this is working but could be easier to read.
+Obviously, this is working but could be easier to read.
 
 We specify the parameter `num` twice. Because the inner function is expecting the same declared parameter in the left part of the provided function, we can apply point-free notation:
 
