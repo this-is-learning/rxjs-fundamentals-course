@@ -1,6 +1,6 @@
 ---
 id: part-7
-title: Part 7. Functional Programming Introduction
+title: Part 7. Functional Programming
 ---
 
 # Functional Programming
