@@ -10,3 +10,4 @@ A free and open text-based course about RxJS.
 1. [How RxJS is used by Angular](docs/part-4.md)
 1. [Everything is a stream: Push-based architecture](docs/part-5.md)
 1. [Creational operators](docs/part-6.md)
+1. [Functional Programming](docs/part-7.md)
